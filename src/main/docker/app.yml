@@ -1,0 +1,29 @@
+version: '2'
+services:
+  agrofinca-app:
+    image: agrofinca
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://agrofinca-mariadb:3306/agrofinca?useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=http://keycloak:9080/auth/realms/jhipster
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=web_app
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET=web_app
+      - JHIPSTER_SLEEP=120 # gives time for mariadb server to start
+      - SPRING_DATA_JEST_URI=http://agrofinca-elasticsearch:9200
+      - SPRING_ELASTICSEARCH_REST_URIS=http://agrofinca-elasticsearch:9200
+    ports:
+      - 9080:9080
+  agrofinca-mariadb:
+    extends:
+      file: mariadb.yml
+      service: agrofinca-mariadb
+  agrofinca-elasticsearch:
+    extends:
+      file: elasticsearch.yml
+      service: agrofinca-elasticsearch
+  keycloak:
+    extends:
+      file: keycloak.yml
+      service: keycloak
