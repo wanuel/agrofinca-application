@@ -1,0 +1,25 @@
+{
+  "agrofincaApp": {
+    "animalPeso": {
+      "home": {
+        "title": "Animal Pesos",
+        "createLabel": "Crear nuevo Animal Peso",
+        "createOrEditLabel": "Crear o editar Animal Peso",
+        "search": "Buscar Animal Peso",
+        "notFound": "Ningún Animal Pesos encontrado"
+      },
+      "created": "Un nuevo Animal Peso ha sido creado con el identificador {{ param }}",
+      "updated": "Un Animal Peso ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Animal Peso ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Animal Peso {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Peso"
+      },
+      "fecha": "Fecha",
+      "peso": "Peso",
+      "animal": "Animal"
+    }
+  }
+}

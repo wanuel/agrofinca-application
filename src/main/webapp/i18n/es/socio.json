@@ -1,0 +1,26 @@
+{
+  "agrofincaApp": {
+    "socio": {
+      "home": {
+        "title": "Socios",
+        "createLabel": "Crear nuevo Socio",
+        "createOrEditLabel": "Crear o editar Socio",
+        "search": "Buscar Socio",
+        "notFound": "Ningún Socios encontrado"
+      },
+      "created": "Un nuevo Socio ha sido creado con el identificador {{ param }}",
+      "updated": "Un Socio ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Socio ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Socio {{ id }}?"
+      },
+      "detail": {
+        "title": "Socio"
+      },
+      "fechaIngreso": "Fecha Ingreso",
+      "participacion": "Participacion",
+      "personas": "Personas",
+      "sociedades": "Sociedades"
+    }
+  }
+}

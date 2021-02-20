@@ -1,0 +1,11 @@
+{
+  "agrofincaApp": {
+    "TIPODOCUMENTO": {
+      "null": "",
+      "CC": "CC",
+      "TI": "TI",
+      "CE": "CE",
+      "NIT": "NIT"
+    }
+  }
+}

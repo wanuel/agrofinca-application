@@ -1,0 +1,44 @@
+{
+  "name": "Socio",
+  "fields": [
+    {
+      "fieldName": "fechaIngreso",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "participacion",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "persona",
+      "otherEntityRelationshipName": "socio",
+      "relationshipName": "personas"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sociedad",
+      "otherEntityRelationshipName": "socio",
+      "relationshipName": "sociedades"
+    }
+  ],
+  "changelogDate": "20210220002513",
+  "entityTableName": "socio",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,30 @@
+{
+  "agrofincaApp": {
+    "finca": {
+      "home": {
+        "title": "Fincas",
+        "createLabel": "Crear nuevo Finca",
+        "createOrEditLabel": "Crear o editar Finca",
+        "search": "Buscar Finca",
+        "notFound": "Ningún Fincas encontrado"
+      },
+      "created": "Un nuevo Finca ha sido creado con el identificador {{ param }}",
+      "updated": "Un Finca ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Finca ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Finca {{ id }}?"
+      },
+      "detail": {
+        "title": "Finca"
+      },
+      "nombre": "Nombre",
+      "area": "Area",
+      "matricula": "Matricula",
+      "codigoCatastral": "Codigo Catastral",
+      "municipio": "Municipio",
+      "vereda": "Vereda",
+      "obserrvaciones": "Obserrvaciones",
+      "potreros": "Potreros"
+    }
+  }
+}

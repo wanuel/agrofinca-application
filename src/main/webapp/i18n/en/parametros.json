@@ -1,0 +1,31 @@
+{
+  "agrofincaApp": {
+    "parametros": {
+      "home": {
+        "title": "Parametros",
+        "createLabel": "Create a new Parametros",
+        "createOrEditLabel": "Create or edit a Parametros",
+        "search": "Search for Parametros",
+        "notFound": "No Parametros found"
+      },
+      "created": "A new Parametros is created with identifier {{ param }}",
+      "updated": "A Parametros is updated with identifier {{ param }}",
+      "deleted": "A Parametros is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Parametros {{ id }}?"
+      },
+      "detail": {
+        "title": "Parametros"
+      },
+      "nombre": "Nombre",
+      "descripcion": "Descripcion",
+      "eventos": "Eventos",
+      "medicamentos": "Medicamentos",
+      "parametros": "Parametros",
+      "tipoLotes": "Tipo Lotes",
+      "tipos": "Tipos",
+      "razas": "Razas",
+      "agrupador": "Agrupador"
+    }
+  }
+}

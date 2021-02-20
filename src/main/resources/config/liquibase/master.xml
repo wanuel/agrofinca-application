@@ -14,7 +14,37 @@
     <property name="uuidType" value="varchar(36)" dbms="h2, mysql, mariadb"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001013_added_entity_Finca.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001113_added_entity_Potrero.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001213_added_entity_Lote.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001313_added_entity_PotreroPastoreo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001413_added_entity_Animal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001513_added_entity_AnimalLote.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001613_added_entity_Parametros.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001713_added_entity_AnimalCostos.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001813_added_entity_AnimalEvento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001913_added_entity_AnimalPeso.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002013_added_entity_AnimalImagen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002113_added_entity_AnimalSalud.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002213_added_entity_Evento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002313_added_entity_Persona.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002413_added_entity_Sociedad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002513_added_entity_Socio.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20210220001113_added_entity_constraints_Potrero.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001213_added_entity_constraints_Lote.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001313_added_entity_constraints_PotreroPastoreo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001413_added_entity_constraints_Animal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001513_added_entity_constraints_AnimalLote.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001613_added_entity_constraints_Parametros.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001713_added_entity_constraints_AnimalCostos.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001813_added_entity_constraints_AnimalEvento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220001913_added_entity_constraints_AnimalPeso.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002013_added_entity_constraints_AnimalImagen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002113_added_entity_constraints_AnimalSalud.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002213_added_entity_constraints_Evento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002313_added_entity_constraints_Persona.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210220002413_added_entity_constraints_Sociedad.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

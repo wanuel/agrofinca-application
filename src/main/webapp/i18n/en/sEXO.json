@@ -1,0 +1,9 @@
+{
+  "agrofincaApp": {
+    "SEXO": {
+      "null": "",
+      "MACHO": "MACHO",
+      "HEMBRA": "HEMBRA"
+    }
+  }
+}

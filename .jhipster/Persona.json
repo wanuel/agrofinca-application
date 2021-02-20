@@ -1,0 +1,68 @@
+{
+  "name": "Persona",
+  "fields": [
+    {
+      "fieldName": "tipoDocumento",
+      "fieldType": "TIPODOCUMENTO",
+      "fieldValues": "CC,TI,CE,NIT",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "numDocuemnto",
+      "fieldType": "Long",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "primerNombre",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "segundoNombre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "primerApellido",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "segundoApellido",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fechaNacimiento",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "genero",
+      "fieldType": "GENERO",
+      "fieldValues": "MASCULINO,FEMENINO"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "socio",
+      "otherEntityRelationshipName": "personas",
+      "relationshipName": "socio",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220002313",
+  "entityTableName": "persona",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

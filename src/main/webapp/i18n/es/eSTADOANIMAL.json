@@ -1,0 +1,9 @@
+{
+  "agrofincaApp": {
+    "ESTADOANIMAL": {
+      "null": "",
+      "VIVO": "VIVO",
+      "MUERTO": "MUERTO"
+    }
+  }
+}
