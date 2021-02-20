@@ -1,0 +1,32 @@
+{
+  "agrofincaApp": {
+    "animalSalud": {
+      "home": {
+        "title": "Animal Saluds",
+        "createLabel": "Crear nuevo Animal Salud",
+        "createOrEditLabel": "Crear o editar Animal Salud",
+        "search": "Buscar Animal Salud",
+        "notFound": "Ningún Animal Saluds encontrado"
+      },
+      "created": "Un nuevo Animal Salud ha sido creado con el identificador {{ param }}",
+      "updated": "Un Animal Salud ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Animal Salud ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Animal Salud {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Salud"
+      },
+      "fecha": "Fecha",
+      "nombre": "Nombre",
+      "laboratorio": "Laboratorio",
+      "dosis": "Dosis",
+      "inyectado": "Inyectado",
+      "intramuscular": "Intramuscular",
+      "subcutaneo": "Subcutaneo",
+      "observacion": "Observacion",
+      "evento": "Evento",
+      "medicamento": "Medicamento"
+    }
+  }
+}

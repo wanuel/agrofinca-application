@@ -1,0 +1,99 @@
+{
+  "name": "Animal",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "caracterizacion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "hierro",
+      "fieldType": "SINO",
+      "fieldValues": "SI,NO"
+    },
+    {
+      "fieldName": "fechaNacimiento",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaCompra",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "sexo",
+      "fieldType": "SEXO",
+      "fieldValues": "MACHO,HEMBRA",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "castrado",
+      "fieldType": "SINO",
+      "fieldValues": "SI,NO",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "fechaCastracion",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "ESTADOANIMAL",
+      "fieldValues": "VIVO,MUERTO",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalLote",
+      "otherEntityRelationshipName": "animal",
+      "relationshipName": "lotes"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalImagen",
+      "otherEntityRelationshipName": "animal",
+      "relationshipName": "imagenes"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalEvento",
+      "otherEntityRelationshipName": "animal",
+      "relationshipName": "eventos"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "parametros",
+      "otherEntityRelationshipName": "tipos",
+      "relationshipName": "tipo",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "parametros",
+      "otherEntityRelationshipName": "razas",
+      "relationshipName": "raza",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220001413",
+  "entityTableName": "animal",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

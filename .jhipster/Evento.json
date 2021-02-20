@@ -1,0 +1,42 @@
+{
+  "name": "Evento",
+  "fields": [
+    {
+      "fieldName": "fecha",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "observacion",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalEvento",
+      "otherEntityRelationshipName": "evento",
+      "relationshipName": "eventos"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "parametros",
+      "otherEntityRelationshipName": "eventos",
+      "relationshipName": "evento",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220002213",
+  "entityTableName": "evento",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

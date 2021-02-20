@@ -1,0 +1,39 @@
+{
+  "name": "AnimalPeso",
+  "fields": [
+    {
+      "fieldName": "fecha",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "peso",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "animalEvento",
+      "otherEntityRelationshipName": "pesos",
+      "relationshipName": "animal",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220001913",
+  "entityTableName": "animal_peso",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,25 @@
+{
+  "agrofincaApp": {
+    "animalPeso": {
+      "home": {
+        "title": "Animal Pesos",
+        "createLabel": "Create a new Animal Peso",
+        "createOrEditLabel": "Create or edit a Animal Peso",
+        "search": "Search for Animal Peso",
+        "notFound": "No Animal Pesos found"
+      },
+      "created": "A new Animal Peso is created with identifier {{ param }}",
+      "updated": "A Animal Peso is updated with identifier {{ param }}",
+      "deleted": "A Animal Peso is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Animal Peso {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Peso"
+      },
+      "fecha": "Fecha",
+      "peso": "Peso",
+      "animal": "Animal"
+    }
+  }
+}

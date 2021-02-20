@@ -1,0 +1,26 @@
+{
+  "agrofincaApp": {
+    "evento": {
+      "home": {
+        "title": "Eventos",
+        "createLabel": "Crear nuevo Evento",
+        "createOrEditLabel": "Crear o editar Evento",
+        "search": "Buscar Evento",
+        "notFound": "Ningún Eventos encontrado"
+      },
+      "created": "Un nuevo Evento ha sido creado con el identificador {{ param }}",
+      "updated": "Un Evento ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Evento ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Evento {{ id }}?"
+      },
+      "detail": {
+        "title": "Evento"
+      },
+      "fecha": "Fecha",
+      "observacion": "Observacion",
+      "eventos": "Eventos",
+      "evento": "Evento"
+    }
+  }
+}
