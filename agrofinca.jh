@@ -14,7 +14,7 @@ entity Potrero {
     area BigDecimal
 }
 entity Lote {
-	nombre String required, 
+  	nombre String required, 
     fecha LocalDate required, 
     estado ESTADOLOTE required
 }
