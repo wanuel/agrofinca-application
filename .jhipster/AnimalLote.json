@@ -1,0 +1,43 @@
+{
+  "name": "AnimalLote",
+  "fields": [
+    {
+      "fieldName": "fechaIngreso",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "fechaSalida",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "animal",
+      "otherEntityRelationshipName": "lotes",
+      "relationshipName": "animal",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lote",
+      "otherEntityRelationshipName": "animales",
+      "relationshipName": "lote",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220000742",
+  "entityTableName": "animal_lote",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

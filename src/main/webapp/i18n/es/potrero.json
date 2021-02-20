@@ -1,0 +1,28 @@
+{
+  "agrofincaApp": {
+    "potrero": {
+      "home": {
+        "title": "Potreros",
+        "createLabel": "Crear nuevo Potrero",
+        "createOrEditLabel": "Crear o editar Potrero",
+        "search": "Buscar Potrero",
+        "notFound": "Ningún Potreros encontrado"
+      },
+      "created": "Un nuevo Potrero ha sido creado con el identificador {{ param }}",
+      "updated": "Un Potrero ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Potrero ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Potrero {{ id }}?"
+      },
+      "detail": {
+        "title": "Potrero"
+      },
+      "nombre": "Nombre",
+      "descripcion": "Descripcion",
+      "pasto": "Pasto",
+      "area": "Area",
+      "pastoreos": "Pastoreos",
+      "finca": "Finca"
+    }
+  }
+}

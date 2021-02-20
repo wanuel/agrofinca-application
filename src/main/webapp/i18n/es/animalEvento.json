@@ -1,0 +1,27 @@
+{
+  "agrofincaApp": {
+    "animalEvento": {
+      "home": {
+        "title": "Animal Eventos",
+        "createLabel": "Crear nuevo Animal Evento",
+        "createOrEditLabel": "Crear o editar Animal Evento",
+        "search": "Buscar Animal Evento",
+        "notFound": "Ningún Animal Eventos encontrado"
+      },
+      "created": "Un nuevo Animal Evento ha sido creado con el identificador {{ param }}",
+      "updated": "Un Animal Evento ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Animal Evento ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Animal Evento {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Evento"
+      },
+      "tratamientos": "Tratamientos",
+      "pesos": "Pesos",
+      "costos": "Costos",
+      "animal": "Animal",
+      "evento": "Evento"
+    }
+  }
+}

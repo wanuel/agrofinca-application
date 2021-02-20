@@ -1,0 +1,26 @@
+{
+  "agrofincaApp": {
+    "animalLote": {
+      "home": {
+        "title": "Animal Lotes",
+        "createLabel": "Crear nuevo Animal Lote",
+        "createOrEditLabel": "Crear o editar Animal Lote",
+        "search": "Buscar Animal Lote",
+        "notFound": "Ningún Animal Lotes encontrado"
+      },
+      "created": "Un nuevo Animal Lote ha sido creado con el identificador {{ param }}",
+      "updated": "Un Animal Lote ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Animal Lote ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Animal Lote {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Lote"
+      },
+      "fechaIngreso": "Fecha Ingreso",
+      "fechaSalida": "Fecha Salida",
+      "animal": "Animal",
+      "lote": "Lote"
+    }
+  }
+}

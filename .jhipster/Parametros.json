@@ -1,0 +1,72 @@
+{
+  "name": "Parametros",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "evento",
+      "otherEntityRelationshipName": "evento",
+      "relationshipName": "eventos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalSalud",
+      "otherEntityRelationshipName": "medicamento",
+      "relationshipName": "medicamentos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "parametros",
+      "otherEntityRelationshipName": "agrupador",
+      "relationshipName": "parametros"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "lote",
+      "otherEntityRelationshipName": "tipo",
+      "relationshipName": "tipoLotes"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animal",
+      "otherEntityRelationshipName": "tipo",
+      "relationshipName": "tipos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animal",
+      "otherEntityRelationshipName": "raza",
+      "relationshipName": "razas"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "parametros",
+      "otherEntityRelationshipName": "parametros",
+      "relationshipName": "agrupador",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220000842",
+  "entityTableName": "parametros",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

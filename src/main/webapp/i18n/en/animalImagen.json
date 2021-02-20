@@ -1,0 +1,26 @@
+{
+  "agrofincaApp": {
+    "animalImagen": {
+      "home": {
+        "title": "Animal Imagens",
+        "createLabel": "Create a new Animal Imagen",
+        "createOrEditLabel": "Create or edit a Animal Imagen",
+        "search": "Search for Animal Imagen",
+        "notFound": "No Animal Imagens found"
+      },
+      "created": "A new Animal Imagen is created with identifier {{ param }}",
+      "updated": "A Animal Imagen is updated with identifier {{ param }}",
+      "deleted": "A Animal Imagen is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Animal Imagen {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Imagen"
+      },
+      "fecha": "Fecha",
+      "nota": "Nota",
+      "imagen": "Imagen",
+      "animal": "Animal"
+    }
+  }
+}

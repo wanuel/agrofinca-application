@@ -1,0 +1,27 @@
+{
+  "agrofincaApp": {
+    "sociedad": {
+      "home": {
+        "title": "Sociedads",
+        "createLabel": "Create a new Sociedad",
+        "createOrEditLabel": "Create or edit a Sociedad",
+        "search": "Search for Sociedad",
+        "notFound": "No Sociedads found"
+      },
+      "created": "A new Sociedad is created with identifier {{ param }}",
+      "updated": "A Sociedad is updated with identifier {{ param }}",
+      "deleted": "A Sociedad is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Sociedad {{ id }}?"
+      },
+      "detail": {
+        "title": "Sociedad"
+      },
+      "nombre": "Nombre",
+      "fechaCreacion": "Fecha Creacion",
+      "estado": "Estado",
+      "observaciones": "Observaciones",
+      "socio": "Socio"
+    }
+  }
+}

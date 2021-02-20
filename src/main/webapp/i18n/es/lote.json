@@ -1,0 +1,28 @@
+{
+  "agrofincaApp": {
+    "lote": {
+      "home": {
+        "title": "Lotes",
+        "createLabel": "Crear nuevo Lote",
+        "createOrEditLabel": "Crear o editar Lote",
+        "search": "Buscar Lote",
+        "notFound": "Ningún Lotes encontrado"
+      },
+      "created": "Un nuevo Lote ha sido creado con el identificador {{ param }}",
+      "updated": "Un Lote ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Lote ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Lote {{ id }}?"
+      },
+      "detail": {
+        "title": "Lote"
+      },
+      "nombre": "Nombre",
+      "fecha": "Fecha",
+      "estado": "Estado",
+      "pastoreos": "Pastoreos",
+      "animales": "Animales",
+      "tipo": "Tipo"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "PotreroPastoreo",
+  "fields": [
+    {
+      "fieldName": "fechaIngreso",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "fechaSalida",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaLimpia",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "diasDescanso",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "diasCarga",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "limpia",
+      "fieldType": "SINO",
+      "fieldValues": "SI,NO",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lote",
+      "otherEntityRelationshipName": "pastoreos",
+      "relationshipName": "lote",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "potrero",
+      "otherEntityRelationshipName": "pastoreos",
+      "relationshipName": "potrero",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220000542",
+  "entityTableName": "potrero_pastoreo",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

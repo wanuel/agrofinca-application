@@ -1,0 +1,59 @@
+{
+  "name": "Lote",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "fecha",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "ESTADOLOTE",
+      "fieldValues": "ACTIVO,INACTIVO",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "potreroPastoreo",
+      "otherEntityRelationshipName": "lote",
+      "relationshipName": "pastoreos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalLote",
+      "otherEntityRelationshipName": "lote",
+      "relationshipName": "animales"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "parametros",
+      "otherEntityRelationshipName": "tipoLotes",
+      "relationshipName": "tipo",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220000442",
+  "entityTableName": "lote",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

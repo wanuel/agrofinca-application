@@ -1,0 +1,30 @@
+{
+  "agrofincaApp": {
+    "potreroPastoreo": {
+      "home": {
+        "title": "Potrero Pastoreos",
+        "createLabel": "Crear nuevo Potrero Pastoreo",
+        "createOrEditLabel": "Crear o editar Potrero Pastoreo",
+        "search": "Buscar Potrero Pastoreo",
+        "notFound": "Ningún Potrero Pastoreos encontrado"
+      },
+      "created": "Un nuevo Potrero Pastoreo ha sido creado con el identificador {{ param }}",
+      "updated": "Un Potrero Pastoreo ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Potrero Pastoreo ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Potrero Pastoreo {{ id }}?"
+      },
+      "detail": {
+        "title": "Potrero Pastoreo"
+      },
+      "fechaIngreso": "Fecha Ingreso",
+      "fechaSalida": "Fecha Salida",
+      "fechaLimpia": "Fecha Limpia",
+      "diasDescanso": "Dias Descanso",
+      "diasCarga": "Dias Carga",
+      "limpia": "Limpia",
+      "lote": "Lote",
+      "potrero": "Potrero"
+    }
+  }
+}

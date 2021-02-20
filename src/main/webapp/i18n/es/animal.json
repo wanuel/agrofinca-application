@@ -1,0 +1,36 @@
+{
+  "agrofincaApp": {
+    "animal": {
+      "home": {
+        "title": "Animals",
+        "createLabel": "Crear nuevo Animal",
+        "createOrEditLabel": "Crear o editar Animal",
+        "search": "Buscar Animal",
+        "notFound": "Ningún Animals encontrado"
+      },
+      "created": "Un nuevo Animal ha sido creado con el identificador {{ param }}",
+      "updated": "Un Animal ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Animal ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Animal {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal"
+      },
+      "nombre": "Nombre",
+      "caracterizacion": "Caracterizacion",
+      "hierro": "Hierro",
+      "fechaNacimiento": "Fecha Nacimiento",
+      "fechaCompra": "Fecha Compra",
+      "sexo": "Sexo",
+      "castrado": "Castrado",
+      "fechaCastracion": "Fecha Castracion",
+      "estado": "Estado",
+      "lotes": "Lotes",
+      "imagenes": "Imagenes",
+      "eventos": "Eventos",
+      "tipo": "Tipo",
+      "raza": "Raza"
+    }
+  }
+}
