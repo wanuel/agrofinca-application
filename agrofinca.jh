@@ -1,0 +1,177 @@
+entity Finca {
+	nombre String required,
+    area BigDecimal,
+    matricula String,
+    codigoCatastral String,
+    municipio String, 
+    vereda String, 
+    obserrvaciones String
+}
+entity Potrero {
+	nombre String required, 
+    descripcion String, 
+    pasto String,
+    area BigDecimal
+}
+entity Lote {
+	nombre String required, 
+    fecha LocalDate required, 
+    estado ESTADOLOTE required
+}
+entity PotreroPastoreo {
+	fechaIngreso LocalDate required,
+    fechaSalida LocalDate,
+	fechaLimpia LocalDate,
+    diasDescanso Integer,
+    diasCarga Integer,
+    limpia SINO required
+}
+enum ESTADOLOTE {
+	ACTIVO, INACTIVO
+}
+enum SINO {
+    SI, NO
+}
+enum SEXO {
+	MACHO, HEMBRA
+}
+
+enum ESTADOANIMAL {
+	VIVO, MUERTO
+}
+
+entity Animal{
+	nombre String,
+    caracterizacion String,
+    hierro SINO, 
+    fechaNacimiento LocalDate,
+    fechaCompra LocalDate,
+    sexo SEXO required,
+    castrado SINO required,
+    fechaCastracion LocalDate, 
+    estado ESTADOANIMAL required
+}
+entity AnimalLote {
+	fechaIngreso LocalDate required, 
+    fechaSalida LocalDate
+}
+entity Parametros{
+	nombre String required, 
+    descripcion String
+}
+
+entity AnimalCostos {
+	fecha LocalDate required, 
+    valor BigDecimal required
+}
+
+entity AnimalEvento {
+	fecha LocalDate
+}
+
+entity AnimalPeso {
+	fecha LocalDate required,
+    peso BigDecimal required
+}
+
+entity AnimalImagen {
+	fecha LocalDate required,
+    nota String, 
+    imagen Blob required
+}
+
+entity AnimalSalud {
+	fecha LocalDate required,
+    nombre String required, 
+    laboratorio String, 
+    dosis BigDecimal required,
+    inyectado SINO required,
+    intramuscular SINO required,
+    subcutaneo SINO required,
+    observacion String
+}
+
+
+enum TIPODOCUMENTO{
+	CC,TI,CE,NIT
+}
+enum GENERO {
+	MASCULINO,FEMENINO
+}
+
+entity Evento {
+	fecha LocalDate required,
+    observacion String
+}
+
+entity AnimalEvento {
+	
+}
+entity Persona {
+	tipoDocumento TIPODOCUMENTO required,
+    numDocuemnto Long required, 
+    primerNombre String required,
+    segundoNombre String,
+    primerApellido String,
+    segundoApellido String,
+    fechaNacimiento LocalDate,
+    genero GENERO
+}
+
+entity Sociedad {
+	nombre String required, 
+    fechaCreacion LocalDate required,
+    estado ESTADOSOCIEDAD required,
+    observaciones String
+}
+
+enum ESTADOSOCIEDAD {
+	ACTIVO, INACTIVO
+}
+
+entity Socio {
+	fechaIngreso LocalDate required,
+    participacion BigDecimal required
+}
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+	Finca{potreros} to Potrero{finca},
+    Lote{pastoreos} to PotreroPastoreo{lote}, 
+    Potrero{pastoreos} to PotreroPastoreo{potrero}, 
+    Animal{lotes} to AnimalLote{animal},
+    Lote{animales} to AnimalLote{lote},
+    Animal{imagenes} to AnimalImagen{animal},
+    Parametros{eventos} to Evento{evento},
+    Animal{eventos} to AnimalEvento{animal},
+    Evento{eventos} to AnimalEvento{evento},
+    AnimalEvento{tratamientos} to AnimalSalud{evento},
+    AnimalEvento{pesos} to AnimalPeso{animal},
+    AnimalEvento{costos} to AnimalCostos{animal},
+    Parametros{medicamentos} to AnimalSalud{medicamento},
+    Parametros{parametros} to Parametros{agrupador},
+    Parametros{tipoLotes} to Lote{tipo},
+    Parametros{tipos} to Animal{tipo},
+    Parametros{razas} to Animal{raza},
+    Socio{personas} to Persona{socio},
+    Socio{sociedades} to Sociedad{socio}
+}
+
+//relationship ManyToMany {
+	//Animal{hijos} to Animal{madre},
+    //Animal{hijos} to Animal{padre}
+//}
+
+// Set pagination options
+//paginate Finca, Persona with infinite-scroll
+//paginate Finca, Persona, Potrero, PotreroActividad, AnimalPastoreo with pagination
+//paginate AnimalCostos, AnimalEvento, AnimalImagen with pagination
+//paginate AnimalPeso, AnimalVacunas, AnimalPeso, Parametros with pagination
+paginate all with pagination
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+//service all with serviceImpl except Employee, Job
+service all  with serviceImpl
+// Set an angular suffix
+// angularSuffix * with mySuffix
