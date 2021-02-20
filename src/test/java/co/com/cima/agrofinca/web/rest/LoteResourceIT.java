@@ -1,21 +1,34 @@
 package co.com.cima.agrofinca.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import co.com.cima.agrofinca.AgrofincaApp;
 import co.com.cima.agrofinca.config.TestSecurityConfiguration;
-import co.com.cima.agrofinca.domain.Lote;
-import co.com.cima.agrofinca.domain.PotreroPastoreo;
 import co.com.cima.agrofinca.domain.AnimalLote;
+import co.com.cima.agrofinca.domain.Lote;
 import co.com.cima.agrofinca.domain.Parametros;
+import co.com.cima.agrofinca.domain.PotreroPastoreo;
+import co.com.cima.agrofinca.domain.enumeration.ESTADOLOTE;
 import co.com.cima.agrofinca.repository.LoteRepository;
 import co.com.cima.agrofinca.repository.search.LoteSearchRepository;
+import co.com.cima.agrofinca.service.LoteQueryService;
 import co.com.cima.agrofinca.service.LoteService;
 import co.com.cima.agrofinca.service.dto.LoteCriteria;
-import co.com.cima.agrofinca.service.LoteQueryService;
-
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,21 +39,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import co.com.cima.agrofinca.domain.enumeration.ESTADOLOTE;
 /**
  * Integration tests for the {@link LoteResource} REST controller.
  */
@@ -49,7 +48,6 @@ import co.com.cima.agrofinca.domain.enumeration.ESTADOLOTE;
 @AutoConfigureMockMvc
 @WithMockUser
 public class LoteResourceIT {
-
     private static final String DEFAULT_NOMBRE = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE = "BBBBBBBBBB";
 
@@ -92,12 +90,10 @@ public class LoteResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Lote createEntity(EntityManager em) {
-        Lote lote = new Lote()
-            .nombre(DEFAULT_NOMBRE)
-            .fecha(DEFAULT_FECHA)
-            .estado(DEFAULT_ESTADO);
+        Lote lote = new Lote().nombre(DEFAULT_NOMBRE).fecha(DEFAULT_FECHA).estado(DEFAULT_ESTADO);
         return lote;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -105,10 +101,7 @@ public class LoteResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Lote createUpdatedEntity(EntityManager em) {
-        Lote lote = new Lote()
-            .nombre(UPDATED_NOMBRE)
-            .fecha(UPDATED_FECHA)
-            .estado(UPDATED_ESTADO);
+        Lote lote = new Lote().nombre(UPDATED_NOMBRE).fecha(UPDATED_FECHA).estado(UPDATED_ESTADO);
         return lote;
     }
 
@@ -122,9 +115,10 @@ public class LoteResourceIT {
     public void createLote() throws Exception {
         int databaseSizeBeforeCreate = loteRepository.findAll().size();
         // Create the Lote
-        restLoteMockMvc.perform(post("/api/lotes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lote)))
+        restLoteMockMvc
+            .perform(
+                post("/api/lotes").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lote))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Lote in the database
@@ -148,9 +142,10 @@ public class LoteResourceIT {
         lote.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restLoteMockMvc.perform(post("/api/lotes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lote)))
+        restLoteMockMvc
+            .perform(
+                post("/api/lotes").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lote))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Lote in the database
@@ -161,7 +156,6 @@ public class LoteResourceIT {
         verify(mockLoteSearchRepository, times(0)).save(lote);
     }
 
-
     @Test
     @Transactional
     public void checkNombreIsRequired() throws Exception {
@@ -171,10 +165,10 @@ public class LoteResourceIT {
 
         // Create the Lote, which fails.
 
-
-        restLoteMockMvc.perform(post("/api/lotes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lote)))
+        restLoteMockMvc
+            .perform(
+                post("/api/lotes").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lote))
+            )
             .andExpect(status().isBadRequest());
 
         List<Lote> loteList = loteRepository.findAll();
@@ -190,10 +184,10 @@ public class LoteResourceIT {
 
         // Create the Lote, which fails.
 
-
-        restLoteMockMvc.perform(post("/api/lotes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lote)))
+        restLoteMockMvc
+            .perform(
+                post("/api/lotes").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lote))
+            )
             .andExpect(status().isBadRequest());
 
         List<Lote> loteList = loteRepository.findAll();
@@ -209,10 +203,10 @@ public class LoteResourceIT {
 
         // Create the Lote, which fails.
 
-
-        restLoteMockMvc.perform(post("/api/lotes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lote)))
+        restLoteMockMvc
+            .perform(
+                post("/api/lotes").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lote))
+            )
             .andExpect(status().isBadRequest());
 
         List<Lote> loteList = loteRepository.findAll();
@@ -226,7 +220,8 @@ public class LoteResourceIT {
         loteRepository.saveAndFlush(lote);
 
         // Get all the loteList
-        restLoteMockMvc.perform(get("/api/lotes?sort=id,desc"))
+        restLoteMockMvc
+            .perform(get("/api/lotes?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(lote.getId().intValue())))
@@ -234,7 +229,7 @@ public class LoteResourceIT {
             .andExpect(jsonPath("$.[*].fecha").value(hasItem(DEFAULT_FECHA.toString())))
             .andExpect(jsonPath("$.[*].estado").value(hasItem(DEFAULT_ESTADO.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getLote() throws Exception {
@@ -242,7 +237,8 @@ public class LoteResourceIT {
         loteRepository.saveAndFlush(lote);
 
         // Get the lote
-        restLoteMockMvc.perform(get("/api/lotes/{id}", lote.getId()))
+        restLoteMockMvc
+            .perform(get("/api/lotes/{id}", lote.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(lote.getId().intValue()))
@@ -250,7 +246,6 @@ public class LoteResourceIT {
             .andExpect(jsonPath("$.fecha").value(DEFAULT_FECHA.toString()))
             .andExpect(jsonPath("$.estado").value(DEFAULT_ESTADO.toString()));
     }
-
 
     @Test
     @Transactional
@@ -269,7 +264,6 @@ public class LoteResourceIT {
         defaultLoteShouldBeFound("id.lessThanOrEqual=" + id);
         defaultLoteShouldNotBeFound("id.lessThan=" + id);
     }
-
 
     @Test
     @Transactional
@@ -322,7 +316,8 @@ public class LoteResourceIT {
         // Get all the loteList where nombre is null
         defaultLoteShouldNotBeFound("nombre.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllLotesByNombreContainsSomething() throws Exception {
         // Initialize the database
@@ -347,7 +342,6 @@ public class LoteResourceIT {
         // Get all the loteList where nombre does not contain UPDATED_NOMBRE
         defaultLoteShouldBeFound("nombre.doesNotContain=" + UPDATED_NOMBRE);
     }
-
 
     @Test
     @Transactional
@@ -453,7 +447,6 @@ public class LoteResourceIT {
         defaultLoteShouldBeFound("fecha.greaterThan=" + SMALLER_FECHA);
     }
 
-
     @Test
     @Transactional
     public void getAllLotesByEstadoIsEqualToSomething() throws Exception {
@@ -525,7 +518,6 @@ public class LoteResourceIT {
         defaultLoteShouldNotBeFound("pastoreosId.equals=" + (pastoreosId + 1));
     }
 
-
     @Test
     @Transactional
     public void getAllLotesByAnimalesIsEqualToSomething() throws Exception {
@@ -544,7 +536,6 @@ public class LoteResourceIT {
         // Get all the loteList where animales equals to animalesId + 1
         defaultLoteShouldNotBeFound("animalesId.equals=" + (animalesId + 1));
     }
-
 
     @Test
     @Transactional
@@ -569,7 +560,8 @@ public class LoteResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultLoteShouldBeFound(String filter) throws Exception {
-        restLoteMockMvc.perform(get("/api/lotes?sort=id,desc&" + filter))
+        restLoteMockMvc
+            .perform(get("/api/lotes?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(lote.getId().intValue())))
@@ -578,7 +570,8 @@ public class LoteResourceIT {
             .andExpect(jsonPath("$.[*].estado").value(hasItem(DEFAULT_ESTADO.toString())));
 
         // Check, that the count call also returns 1
-        restLoteMockMvc.perform(get("/api/lotes/count?sort=id,desc&" + filter))
+        restLoteMockMvc
+            .perform(get("/api/lotes/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -588,14 +581,16 @@ public class LoteResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultLoteShouldNotBeFound(String filter) throws Exception {
-        restLoteMockMvc.perform(get("/api/lotes?sort=id,desc&" + filter))
+        restLoteMockMvc
+            .perform(get("/api/lotes?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restLoteMockMvc.perform(get("/api/lotes/count?sort=id,desc&" + filter))
+        restLoteMockMvc
+            .perform(get("/api/lotes/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -605,8 +600,7 @@ public class LoteResourceIT {
     @Transactional
     public void getNonExistingLote() throws Exception {
         // Get the lote
-        restLoteMockMvc.perform(get("/api/lotes/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restLoteMockMvc.perform(get("/api/lotes/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -621,14 +615,15 @@ public class LoteResourceIT {
         Lote updatedLote = loteRepository.findById(lote.getId()).get();
         // Disconnect from session so that the updates on updatedLote are not directly saved in db
         em.detach(updatedLote);
-        updatedLote
-            .nombre(UPDATED_NOMBRE)
-            .fecha(UPDATED_FECHA)
-            .estado(UPDATED_ESTADO);
+        updatedLote.nombre(UPDATED_NOMBRE).fecha(UPDATED_FECHA).estado(UPDATED_ESTADO);
 
-        restLoteMockMvc.perform(put("/api/lotes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedLote)))
+        restLoteMockMvc
+            .perform(
+                put("/api/lotes")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedLote))
+            )
             .andExpect(status().isOk());
 
         // Validate the Lote in the database
@@ -649,9 +644,10 @@ public class LoteResourceIT {
         int databaseSizeBeforeUpdate = loteRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restLoteMockMvc.perform(put("/api/lotes").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lote)))
+        restLoteMockMvc
+            .perform(
+                put("/api/lotes").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lote))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Lote in the database
@@ -671,8 +667,8 @@ public class LoteResourceIT {
         int databaseSizeBeforeDelete = loteRepository.findAll().size();
 
         // Delete the lote
-        restLoteMockMvc.perform(delete("/api/lotes/{id}", lote.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restLoteMockMvc
+            .perform(delete("/api/lotes/{id}", lote.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -693,7 +689,8 @@ public class LoteResourceIT {
             .thenReturn(new PageImpl<>(Collections.singletonList(lote), PageRequest.of(0, 1), 1));
 
         // Search the lote
-        restLoteMockMvc.perform(get("/api/_search/lotes?query=id:" + lote.getId()))
+        restLoteMockMvc
+            .perform(get("/api/_search/lotes?query=id:" + lote.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(lote.getId().intValue())))

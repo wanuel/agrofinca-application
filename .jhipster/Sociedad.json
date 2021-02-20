@@ -37,12 +37,20 @@
       "otherEntityField": "id"
     }
   ],
+<<<<<<< HEAD
   "changelogDate": "20210220002413",
+=======
+  "changelogDate": "20210220001642",
+>>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
   "entityTableName": "sociedad",
   "dto": "no",
   "pagination": "pagination",
   "service": "serviceImpl",
+<<<<<<< HEAD
   "jpaMetamodelFiltering": true,
+=======
+  "jpaMetamodelFiltering": false,
+>>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,

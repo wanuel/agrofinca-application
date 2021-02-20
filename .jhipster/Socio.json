@@ -30,12 +30,20 @@
       "relationshipName": "sociedades"
     }
   ],
+<<<<<<< HEAD
   "changelogDate": "20210220002513",
+=======
+  "changelogDate": "20210220001742",
+>>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
   "entityTableName": "socio",
   "dto": "no",
   "pagination": "pagination",
   "service": "serviceImpl",
+<<<<<<< HEAD
   "jpaMetamodelFiltering": true,
+=======
+  "jpaMetamodelFiltering": false,
+>>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,

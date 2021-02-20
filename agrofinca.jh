@@ -14,7 +14,11 @@ entity Potrero {
     area BigDecimal
 }
 entity Lote {
+<<<<<<< HEAD
 	nombre String required, 
+=======
+  	nombre String required, 
+>>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
     fecha LocalDate required, 
     estado ESTADOLOTE required
 }
@@ -175,5 +179,8 @@ paginate all with pagination
 service all  with serviceImpl
 // Set an angular suffix
 // angularSuffix * with mySuffix
+<<<<<<< HEAD
 filter *
 
+=======
+>>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
