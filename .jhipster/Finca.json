@@ -1,0 +1,55 @@
+{
+  "name": "Finca",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "area",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "matricula",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "codigoCatastral",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "municipio",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "vereda",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "obserrvaciones",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "potrero",
+      "otherEntityRelationshipName": "finca",
+      "relationshipName": "potreros"
+    }
+  ],
+  "changelogDate": "20210220000242",
+  "entityTableName": "finca",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

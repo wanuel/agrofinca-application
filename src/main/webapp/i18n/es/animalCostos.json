@@ -1,0 +1,25 @@
+{
+  "agrofincaApp": {
+    "animalCostos": {
+      "home": {
+        "title": "Animal Costos",
+        "createLabel": "Crear nuevo Animal Costos",
+        "createOrEditLabel": "Crear o editar Animal Costos",
+        "search": "Buscar Animal Costos",
+        "notFound": "Ningún Animal Costos encontrado"
+      },
+      "created": "Un nuevo Animal Costos ha sido creado con el identificador {{ param }}",
+      "updated": "Un Animal Costos ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Animal Costos ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Animal Costos {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Costos"
+      },
+      "fecha": "Fecha",
+      "valor": "Valor",
+      "animal": "Animal"
+    }
+  }
+}

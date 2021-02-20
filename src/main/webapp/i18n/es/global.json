@@ -7,6 +7,22 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entidades",
+        "finca": "Finca",
+        "potrero": "Potrero",
+        "lote": "Lote",
+        "potreroPastoreo": "Potrero Pastoreo",
+        "animal": "Animal",
+        "animalLote": "Animal Lote",
+        "parametros": "Parametros",
+        "animalCostos": "Animal Costos",
+        "animalEvento": "Animal Evento",
+        "animalPeso": "Animal Peso",
+        "animalImagen": "Animal Imagen",
+        "animalSalud": "Animal Salud",
+        "evento": "Evento",
+        "persona": "Persona",
+        "sociedad": "Sociedad",
+        "socio": "Socio",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

@@ -1,0 +1,51 @@
+{
+  "name": "Sociedad",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "fechaCreacion",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "ESTADOSOCIEDAD",
+      "fieldValues": "ACTIVO,INACTIVO",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "socio",
+      "otherEntityRelationshipName": "sociedades",
+      "relationshipName": "socio",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220001642",
+  "entityTableName": "sociedad",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

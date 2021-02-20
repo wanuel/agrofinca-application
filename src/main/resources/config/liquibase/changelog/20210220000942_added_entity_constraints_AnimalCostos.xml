@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity AnimalCostos.
+    -->
+    <changeSet id="20210220000942-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="animal_id"
+                                 baseTableName="animal_costos"
+                                 constraintName="fk_animal_costos_animal_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="animal_evento"/>
+
+    </changeSet>
+</databaseChangeLog>

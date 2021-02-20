@@ -1,0 +1,26 @@
+{
+  "agrofincaApp": {
+    "evento": {
+      "home": {
+        "title": "Eventos",
+        "createLabel": "Create a new Evento",
+        "createOrEditLabel": "Create or edit a Evento",
+        "search": "Search for Evento",
+        "notFound": "No Eventos found"
+      },
+      "created": "A new Evento is created with identifier {{ param }}",
+      "updated": "A Evento is updated with identifier {{ param }}",
+      "deleted": "A Evento is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Evento {{ id }}?"
+      },
+      "detail": {
+        "title": "Evento"
+      },
+      "fecha": "Fecha",
+      "observacion": "Observacion",
+      "eventos": "Eventos",
+      "evento": "Evento"
+    }
+  }
+}

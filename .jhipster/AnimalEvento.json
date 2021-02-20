@@ -1,0 +1,49 @@
+{
+  "name": "AnimalEvento",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalSalud",
+      "otherEntityRelationshipName": "evento",
+      "relationshipName": "tratamientos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalPeso",
+      "otherEntityRelationshipName": "animal",
+      "relationshipName": "pesos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalCostos",
+      "otherEntityRelationshipName": "animal",
+      "relationshipName": "costos"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "animal",
+      "otherEntityRelationshipName": "eventos",
+      "relationshipName": "animal",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "evento",
+      "otherEntityRelationshipName": "eventos",
+      "relationshipName": "evento",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210220001042",
+  "entityTableName": "animal_evento",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

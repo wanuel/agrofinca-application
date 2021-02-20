@@ -1,0 +1,30 @@
+{
+  "agrofincaApp": {
+    "potreroPastoreo": {
+      "home": {
+        "title": "Potrero Pastoreos",
+        "createLabel": "Create a new Potrero Pastoreo",
+        "createOrEditLabel": "Create or edit a Potrero Pastoreo",
+        "search": "Search for Potrero Pastoreo",
+        "notFound": "No Potrero Pastoreos found"
+      },
+      "created": "A new Potrero Pastoreo is created with identifier {{ param }}",
+      "updated": "A Potrero Pastoreo is updated with identifier {{ param }}",
+      "deleted": "A Potrero Pastoreo is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Potrero Pastoreo {{ id }}?"
+      },
+      "detail": {
+        "title": "Potrero Pastoreo"
+      },
+      "fechaIngreso": "Fecha Ingreso",
+      "fechaSalida": "Fecha Salida",
+      "fechaLimpia": "Fecha Limpia",
+      "diasDescanso": "Dias Descanso",
+      "diasCarga": "Dias Carga",
+      "limpia": "Limpia",
+      "lote": "Lote",
+      "potrero": "Potrero"
+    }
+  }
+}

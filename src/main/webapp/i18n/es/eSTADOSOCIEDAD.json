@@ -1,0 +1,9 @@
+{
+  "agrofincaApp": {
+    "ESTADOSOCIEDAD": {
+      "null": "",
+      "ACTIVO": "ACTIVO",
+      "INACTIVO": "INACTIVO"
+    }
+  }
+}
