@@ -2,14 +2,22 @@ package co.com.cima.agrofinca.domain;
 
 import co.com.cima.agrofinca.domain.enumeration.GENERO;
 import co.com.cima.agrofinca.domain.enumeration.TIPODOCUMENTO;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDate;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
 /**
  * A Persona.
@@ -54,9 +62,9 @@ public class Persona implements Serializable {
     @Column(name = "genero")
     private GENERO genero;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = "personas", allowSetters = true)
-    private Socio socio;
+    @OneToMany(mappedBy = "persona")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Socio> sociedades = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -171,20 +179,32 @@ public class Persona implements Serializable {
         this.genero = genero;
     }
 
-    public Socio getSocio() {
-        return socio;
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    public Set<Socio> getSociedades() {
+        return sociedades;
     }
 
-    public Persona socio(Socio socio) {
-        this.socio = socio;
+    public Persona sociedades(Set<Socio> sociedades) {
+        this.sociedades = sociedades;
         return this;
     }
 
-    public void setSocio(Socio socio) {
-        this.socio = socio;
+    public Persona addPotreros(Socio socio) {
+        this.sociedades.add(socio);
+        socio.setPersona(this);
+        return this;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public Persona removePotreros(Socio socio) {
+        this.sociedades.remove(socio);
+        socio.setPersona(null);
+        return this;
+    }
+
+    public void setSociedades(Set<Socio> sociedades) {
+        this.sociedades = sociedades;
+    }
 
     @Override
     public boolean equals(Object o) {

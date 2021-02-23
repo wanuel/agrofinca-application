@@ -1,16 +1,14 @@
 package co.com.cima.agrofinca.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 /**
  * A AnimalPeso.
@@ -20,7 +18,6 @@ import java.time.LocalDate;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "animalpeso")
 public class AnimalPeso implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -37,7 +34,7 @@ public class AnimalPeso implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties(value = "pesos", allowSetters = true)
-    private AnimalEvento animal;
+    private AnimalEvento evento;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -74,18 +71,19 @@ public class AnimalPeso implements Serializable {
         this.peso = peso;
     }
 
-    public AnimalEvento getAnimal() {
-        return animal;
+    public AnimalEvento getEvento() {
+        return evento;
     }
 
     public AnimalPeso animal(AnimalEvento animalEvento) {
-        this.animal = animalEvento;
+        this.evento = animalEvento;
         return this;
     }
 
     public void setAnimal(AnimalEvento animalEvento) {
-        this.animal = animalEvento;
+        this.evento = animalEvento;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

@@ -182,7 +182,7 @@ export const Potrero = (props: IPotreroProps) => {
                   <td>{potrero.descripcion}</td>
                   <td>{potrero.pasto}</td>
                   <td>{potrero.area}</td>
-                  <td>{potrero.finca ? <Link to={`finca/${potrero.finca.id}`}>{potrero.finca.id}</Link> : ''}</td>
+                  <td>{potrero.finca ? <Link to={`finca/${potrero.finca.id}`}>{potrero.finca.nombre}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${potrero.id}`} color="info" size="sm">

@@ -174,7 +174,7 @@ export const Parametros = (props: IParametrosProps) => {
                   </td>
                   <td>{parametros.nombre}</td>
                   <td>{parametros.descripcion}</td>
-                  <td>{parametros.agrupador ? <Link to={`parametros/${parametros.agrupador.id}`}>{parametros.agrupador.id}</Link> : ''}</td>
+                  <td>{parametros.agrupador ? <Link to={`parametros/${parametros.agrupador.id}`}>{parametros.agrupador.nombre}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${parametros.id}`} color="info" size="sm">

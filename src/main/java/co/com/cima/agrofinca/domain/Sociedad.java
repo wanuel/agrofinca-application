@@ -1,17 +1,22 @@
 package co.com.cima.agrofinca.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import co.com.cima.agrofinca.domain.enumeration.ESTADOSOCIEDAD;
 import java.io.Serializable;
 import java.time.LocalDate;
-
-import co.com.cima.agrofinca.domain.enumeration.ESTADOSOCIEDAD;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Sociedad.
@@ -21,7 +26,6 @@ import co.com.cima.agrofinca.domain.enumeration.ESTADOSOCIEDAD;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "sociedad")
 public class Sociedad implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -44,9 +48,9 @@ public class Sociedad implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = "sociedades", allowSetters = true)
-    private Socio socio;
+    @OneToMany(mappedBy = "sociedad")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Socio> socios = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -109,19 +113,32 @@ public class Sociedad implements Serializable {
         this.observaciones = observaciones;
     }
 
-    public Socio getSocio() {
-        return socio;
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    public Set<Socio> getSocios() {
+        return socios;
     }
 
-    public Sociedad socio(Socio socio) {
-        this.socio = socio;
+    public Sociedad sociedades(Set<Socio> socios) {
+        this.socios = socios;
         return this;
     }
 
-    public void setSocio(Socio socio) {
-        this.socio = socio;
+    public Sociedad addPotreros(Socio socio) {
+        this.socios.add(socio);
+        socio.setSociedad(this);
+        return this;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    public Sociedad removePotreros(Socio socio) {
+        this.socios.remove(socio);
+        socio.setSociedad(null);
+        return this;
+    }
+
+    public void setSocios(Set<Socio> socios) {
+        this.socios = socios;
+    }
 
     @Override
     public boolean equals(Object o) {

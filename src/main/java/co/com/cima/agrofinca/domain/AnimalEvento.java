@@ -1,15 +1,18 @@
 package co.com.cima.agrofinca.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A AnimalEvento.
@@ -19,7 +22,6 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "animalevento")
 public class AnimalEvento implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -30,11 +32,11 @@ public class AnimalEvento implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<AnimalSalud> tratamientos = new HashSet<>();
 
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(mappedBy = "evento")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<AnimalPeso> pesos = new HashSet<>();
 
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(mappedBy = "evento")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<AnimalCostos> costos = new HashSet<>();
 
@@ -155,6 +157,7 @@ public class AnimalEvento implements Serializable {
     public void setEvento(Evento evento) {
         this.evento = evento;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
