@@ -1,19 +1,30 @@
 package co.com.cima.agrofinca.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import co.com.cima.agrofinca.AgrofincaApp;
 import co.com.cima.agrofinca.config.TestSecurityConfiguration;
 import co.com.cima.agrofinca.domain.Finca;
 import co.com.cima.agrofinca.domain.Potrero;
 import co.com.cima.agrofinca.repository.FincaRepository;
 import co.com.cima.agrofinca.repository.search.FincaSearchRepository;
+import co.com.cima.agrofinca.service.FincaQueryService;
 import co.com.cima.agrofinca.service.FincaService;
 import co.com.cima.agrofinca.service.dto.FincaCriteria;
-import co.com.cima.agrofinca.service.FincaQueryService;
-
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,18 +35,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link FincaResource} REST controller.
@@ -45,7 +44,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class FincaResourceIT {
-
     private static final String DEFAULT_NOMBRE = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE = "BBBBBBBBBB";
 
@@ -65,8 +63,8 @@ public class FincaResourceIT {
     private static final String DEFAULT_VEREDA = "AAAAAAAAAA";
     private static final String UPDATED_VEREDA = "BBBBBBBBBB";
 
-    private static final String DEFAULT_OBSERRVACIONES = "AAAAAAAAAA";
-    private static final String UPDATED_OBSERRVACIONES = "BBBBBBBBBB";
+    private static final String DEFAULT_OBSERVACIONES = "AAAAAAAAAA";
+    private static final String UPDATED_OBSERVACIONES = "BBBBBBBBBB";
 
     @Autowired
     private FincaRepository fincaRepository;
@@ -107,9 +105,10 @@ public class FincaResourceIT {
             .codigoCatastral(DEFAULT_CODIGO_CATASTRAL)
             .municipio(DEFAULT_MUNICIPIO)
             .vereda(DEFAULT_VEREDA)
-            .obserrvaciones(DEFAULT_OBSERRVACIONES);
+            .observaciones(DEFAULT_OBSERVACIONES);
         return finca;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -124,7 +123,7 @@ public class FincaResourceIT {
             .codigoCatastral(UPDATED_CODIGO_CATASTRAL)
             .municipio(UPDATED_MUNICIPIO)
             .vereda(UPDATED_VEREDA)
-            .obserrvaciones(UPDATED_OBSERRVACIONES);
+            .observaciones(UPDATED_OBSERVACIONES);
         return finca;
     }
 
@@ -138,9 +137,10 @@ public class FincaResourceIT {
     public void createFinca() throws Exception {
         int databaseSizeBeforeCreate = fincaRepository.findAll().size();
         // Create the Finca
-        restFincaMockMvc.perform(post("/api/fincas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(finca)))
+        restFincaMockMvc
+            .perform(
+                post("/api/fincas").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(finca))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Finca in the database
@@ -153,7 +153,7 @@ public class FincaResourceIT {
         assertThat(testFinca.getCodigoCatastral()).isEqualTo(DEFAULT_CODIGO_CATASTRAL);
         assertThat(testFinca.getMunicipio()).isEqualTo(DEFAULT_MUNICIPIO);
         assertThat(testFinca.getVereda()).isEqualTo(DEFAULT_VEREDA);
-        assertThat(testFinca.getObserrvaciones()).isEqualTo(DEFAULT_OBSERRVACIONES);
+        assertThat(testFinca.getObservaciones()).isEqualTo(DEFAULT_OBSERVACIONES);
 
         // Validate the Finca in Elasticsearch
         verify(mockFincaSearchRepository, times(1)).save(testFinca);
@@ -168,9 +168,10 @@ public class FincaResourceIT {
         finca.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restFincaMockMvc.perform(post("/api/fincas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(finca)))
+        restFincaMockMvc
+            .perform(
+                post("/api/fincas").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(finca))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Finca in the database
@@ -181,7 +182,6 @@ public class FincaResourceIT {
         verify(mockFincaSearchRepository, times(0)).save(finca);
     }
 
-
     @Test
     @Transactional
     public void checkNombreIsRequired() throws Exception {
@@ -191,10 +191,10 @@ public class FincaResourceIT {
 
         // Create the Finca, which fails.
 
-
-        restFincaMockMvc.perform(post("/api/fincas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(finca)))
+        restFincaMockMvc
+            .perform(
+                post("/api/fincas").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(finca))
+            )
             .andExpect(status().isBadRequest());
 
         List<Finca> fincaList = fincaRepository.findAll();
@@ -208,7 +208,8 @@ public class FincaResourceIT {
         fincaRepository.saveAndFlush(finca);
 
         // Get all the fincaList
-        restFincaMockMvc.perform(get("/api/fincas?sort=id,desc"))
+        restFincaMockMvc
+            .perform(get("/api/fincas?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(finca.getId().intValue())))
@@ -218,9 +219,9 @@ public class FincaResourceIT {
             .andExpect(jsonPath("$.[*].codigoCatastral").value(hasItem(DEFAULT_CODIGO_CATASTRAL)))
             .andExpect(jsonPath("$.[*].municipio").value(hasItem(DEFAULT_MUNICIPIO)))
             .andExpect(jsonPath("$.[*].vereda").value(hasItem(DEFAULT_VEREDA)))
-            .andExpect(jsonPath("$.[*].obserrvaciones").value(hasItem(DEFAULT_OBSERRVACIONES)));
+            .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES)));
     }
-    
+
     @Test
     @Transactional
     public void getFinca() throws Exception {
@@ -228,7 +229,8 @@ public class FincaResourceIT {
         fincaRepository.saveAndFlush(finca);
 
         // Get the finca
-        restFincaMockMvc.perform(get("/api/fincas/{id}", finca.getId()))
+        restFincaMockMvc
+            .perform(get("/api/fincas/{id}", finca.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(finca.getId().intValue()))
@@ -238,9 +240,8 @@ public class FincaResourceIT {
             .andExpect(jsonPath("$.codigoCatastral").value(DEFAULT_CODIGO_CATASTRAL))
             .andExpect(jsonPath("$.municipio").value(DEFAULT_MUNICIPIO))
             .andExpect(jsonPath("$.vereda").value(DEFAULT_VEREDA))
-            .andExpect(jsonPath("$.obserrvaciones").value(DEFAULT_OBSERRVACIONES));
+            .andExpect(jsonPath("$.observaciones").value(DEFAULT_OBSERVACIONES));
     }
-
 
     @Test
     @Transactional
@@ -259,7 +260,6 @@ public class FincaResourceIT {
         defaultFincaShouldBeFound("id.lessThanOrEqual=" + id);
         defaultFincaShouldNotBeFound("id.lessThan=" + id);
     }
-
 
     @Test
     @Transactional
@@ -312,7 +312,8 @@ public class FincaResourceIT {
         // Get all the fincaList where nombre is null
         defaultFincaShouldNotBeFound("nombre.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllFincasByNombreContainsSomething() throws Exception {
         // Initialize the database
@@ -337,7 +338,6 @@ public class FincaResourceIT {
         // Get all the fincaList where nombre does not contain UPDATED_NOMBRE
         defaultFincaShouldBeFound("nombre.doesNotContain=" + UPDATED_NOMBRE);
     }
-
 
     @Test
     @Transactional
@@ -443,7 +443,6 @@ public class FincaResourceIT {
         defaultFincaShouldBeFound("area.greaterThan=" + SMALLER_AREA);
     }
 
-
     @Test
     @Transactional
     public void getAllFincasByMatriculaIsEqualToSomething() throws Exception {
@@ -495,7 +494,8 @@ public class FincaResourceIT {
         // Get all the fincaList where matricula is null
         defaultFincaShouldNotBeFound("matricula.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllFincasByMatriculaContainsSomething() throws Exception {
         // Initialize the database
@@ -520,7 +520,6 @@ public class FincaResourceIT {
         // Get all the fincaList where matricula does not contain UPDATED_MATRICULA
         defaultFincaShouldBeFound("matricula.doesNotContain=" + UPDATED_MATRICULA);
     }
-
 
     @Test
     @Transactional
@@ -573,7 +572,8 @@ public class FincaResourceIT {
         // Get all the fincaList where codigoCatastral is null
         defaultFincaShouldNotBeFound("codigoCatastral.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllFincasByCodigoCatastralContainsSomething() throws Exception {
         // Initialize the database
@@ -598,7 +598,6 @@ public class FincaResourceIT {
         // Get all the fincaList where codigoCatastral does not contain UPDATED_CODIGO_CATASTRAL
         defaultFincaShouldBeFound("codigoCatastral.doesNotContain=" + UPDATED_CODIGO_CATASTRAL);
     }
-
 
     @Test
     @Transactional
@@ -651,7 +650,8 @@ public class FincaResourceIT {
         // Get all the fincaList where municipio is null
         defaultFincaShouldNotBeFound("municipio.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllFincasByMunicipioContainsSomething() throws Exception {
         // Initialize the database
@@ -676,7 +676,6 @@ public class FincaResourceIT {
         // Get all the fincaList where municipio does not contain UPDATED_MUNICIPIO
         defaultFincaShouldBeFound("municipio.doesNotContain=" + UPDATED_MUNICIPIO);
     }
-
 
     @Test
     @Transactional
@@ -729,7 +728,8 @@ public class FincaResourceIT {
         // Get all the fincaList where vereda is null
         defaultFincaShouldNotBeFound("vereda.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllFincasByVeredaContainsSomething() throws Exception {
         // Initialize the database
@@ -755,7 +755,6 @@ public class FincaResourceIT {
         defaultFincaShouldBeFound("vereda.doesNotContain=" + UPDATED_VEREDA);
     }
 
-
     @Test
     @Transactional
     public void getAllFincasByObserrvacionesIsEqualToSomething() throws Exception {
@@ -763,10 +762,10 @@ public class FincaResourceIT {
         fincaRepository.saveAndFlush(finca);
 
         // Get all the fincaList where obserrvaciones equals to DEFAULT_OBSERRVACIONES
-        defaultFincaShouldBeFound("obserrvaciones.equals=" + DEFAULT_OBSERRVACIONES);
+        defaultFincaShouldBeFound("observaciones.equals=" + DEFAULT_OBSERVACIONES);
 
         // Get all the fincaList where obserrvaciones equals to UPDATED_OBSERRVACIONES
-        defaultFincaShouldNotBeFound("obserrvaciones.equals=" + UPDATED_OBSERRVACIONES);
+        defaultFincaShouldNotBeFound("observaciones.equals=" + UPDATED_OBSERVACIONES);
     }
 
     @Test
@@ -776,10 +775,10 @@ public class FincaResourceIT {
         fincaRepository.saveAndFlush(finca);
 
         // Get all the fincaList where obserrvaciones not equals to DEFAULT_OBSERRVACIONES
-        defaultFincaShouldNotBeFound("obserrvaciones.notEquals=" + DEFAULT_OBSERRVACIONES);
+        defaultFincaShouldNotBeFound("observaciones.notEquals=" + DEFAULT_OBSERVACIONES);
 
         // Get all the fincaList where obserrvaciones not equals to UPDATED_OBSERRVACIONES
-        defaultFincaShouldBeFound("obserrvaciones.notEquals=" + UPDATED_OBSERRVACIONES);
+        defaultFincaShouldBeFound("observaciones.notEquals=" + UPDATED_OBSERVACIONES);
     }
 
     @Test
@@ -789,10 +788,10 @@ public class FincaResourceIT {
         fincaRepository.saveAndFlush(finca);
 
         // Get all the fincaList where obserrvaciones in DEFAULT_OBSERRVACIONES or UPDATED_OBSERRVACIONES
-        defaultFincaShouldBeFound("obserrvaciones.in=" + DEFAULT_OBSERRVACIONES + "," + UPDATED_OBSERRVACIONES);
+        defaultFincaShouldBeFound("observaciones.in=" + DEFAULT_OBSERVACIONES + "," + UPDATED_OBSERVACIONES);
 
         // Get all the fincaList where obserrvaciones equals to UPDATED_OBSERRVACIONES
-        defaultFincaShouldNotBeFound("obserrvaciones.in=" + UPDATED_OBSERRVACIONES);
+        defaultFincaShouldNotBeFound("observaciones.in=" + UPDATED_OBSERVACIONES);
     }
 
     @Test
@@ -807,17 +806,18 @@ public class FincaResourceIT {
         // Get all the fincaList where obserrvaciones is null
         defaultFincaShouldNotBeFound("obserrvaciones.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllFincasByObserrvacionesContainsSomething() throws Exception {
         // Initialize the database
         fincaRepository.saveAndFlush(finca);
 
         // Get all the fincaList where obserrvaciones contains DEFAULT_OBSERRVACIONES
-        defaultFincaShouldBeFound("obserrvaciones.contains=" + DEFAULT_OBSERRVACIONES);
+        defaultFincaShouldBeFound("observaciones.contains=" + DEFAULT_OBSERVACIONES);
 
         // Get all the fincaList where obserrvaciones contains UPDATED_OBSERRVACIONES
-        defaultFincaShouldNotBeFound("obserrvaciones.contains=" + UPDATED_OBSERRVACIONES);
+        defaultFincaShouldNotBeFound("observaciones.contains=" + UPDATED_OBSERVACIONES);
     }
 
     @Test
@@ -827,12 +827,11 @@ public class FincaResourceIT {
         fincaRepository.saveAndFlush(finca);
 
         // Get all the fincaList where obserrvaciones does not contain DEFAULT_OBSERRVACIONES
-        defaultFincaShouldNotBeFound("obserrvaciones.doesNotContain=" + DEFAULT_OBSERRVACIONES);
+        defaultFincaShouldNotBeFound("observaciones.doesNotContain=" + DEFAULT_OBSERVACIONES);
 
         // Get all the fincaList where obserrvaciones does not contain UPDATED_OBSERRVACIONES
-        defaultFincaShouldBeFound("obserrvaciones.doesNotContain=" + UPDATED_OBSERRVACIONES);
+        defaultFincaShouldBeFound("observaciones.doesNotContain=" + UPDATED_OBSERVACIONES);
     }
-
 
     @Test
     @Transactional
@@ -857,7 +856,8 @@ public class FincaResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultFincaShouldBeFound(String filter) throws Exception {
-        restFincaMockMvc.perform(get("/api/fincas?sort=id,desc&" + filter))
+        restFincaMockMvc
+            .perform(get("/api/fincas?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(finca.getId().intValue())))
@@ -867,10 +867,11 @@ public class FincaResourceIT {
             .andExpect(jsonPath("$.[*].codigoCatastral").value(hasItem(DEFAULT_CODIGO_CATASTRAL)))
             .andExpect(jsonPath("$.[*].municipio").value(hasItem(DEFAULT_MUNICIPIO)))
             .andExpect(jsonPath("$.[*].vereda").value(hasItem(DEFAULT_VEREDA)))
-            .andExpect(jsonPath("$.[*].obserrvaciones").value(hasItem(DEFAULT_OBSERRVACIONES)));
+            .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES)));
 
         // Check, that the count call also returns 1
-        restFincaMockMvc.perform(get("/api/fincas/count?sort=id,desc&" + filter))
+        restFincaMockMvc
+            .perform(get("/api/fincas/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -880,14 +881,16 @@ public class FincaResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultFincaShouldNotBeFound(String filter) throws Exception {
-        restFincaMockMvc.perform(get("/api/fincas?sort=id,desc&" + filter))
+        restFincaMockMvc
+            .perform(get("/api/fincas?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restFincaMockMvc.perform(get("/api/fincas/count?sort=id,desc&" + filter))
+        restFincaMockMvc
+            .perform(get("/api/fincas/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -897,8 +900,7 @@ public class FincaResourceIT {
     @Transactional
     public void getNonExistingFinca() throws Exception {
         // Get the finca
-        restFincaMockMvc.perform(get("/api/fincas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restFincaMockMvc.perform(get("/api/fincas/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -920,11 +922,15 @@ public class FincaResourceIT {
             .codigoCatastral(UPDATED_CODIGO_CATASTRAL)
             .municipio(UPDATED_MUNICIPIO)
             .vereda(UPDATED_VEREDA)
-            .obserrvaciones(UPDATED_OBSERRVACIONES);
+            .observaciones(UPDATED_OBSERVACIONES);
 
-        restFincaMockMvc.perform(put("/api/fincas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedFinca)))
+        restFincaMockMvc
+            .perform(
+                put("/api/fincas")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedFinca))
+            )
             .andExpect(status().isOk());
 
         // Validate the Finca in the database
@@ -937,7 +943,7 @@ public class FincaResourceIT {
         assertThat(testFinca.getCodigoCatastral()).isEqualTo(UPDATED_CODIGO_CATASTRAL);
         assertThat(testFinca.getMunicipio()).isEqualTo(UPDATED_MUNICIPIO);
         assertThat(testFinca.getVereda()).isEqualTo(UPDATED_VEREDA);
-        assertThat(testFinca.getObserrvaciones()).isEqualTo(UPDATED_OBSERRVACIONES);
+        assertThat(testFinca.getObservaciones()).isEqualTo(UPDATED_OBSERVACIONES);
 
         // Validate the Finca in Elasticsearch
         verify(mockFincaSearchRepository, times(2)).save(testFinca);
@@ -949,9 +955,10 @@ public class FincaResourceIT {
         int databaseSizeBeforeUpdate = fincaRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restFincaMockMvc.perform(put("/api/fincas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(finca)))
+        restFincaMockMvc
+            .perform(
+                put("/api/fincas").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(finca))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Finca in the database
@@ -971,8 +978,8 @@ public class FincaResourceIT {
         int databaseSizeBeforeDelete = fincaRepository.findAll().size();
 
         // Delete the finca
-        restFincaMockMvc.perform(delete("/api/fincas/{id}", finca.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restFincaMockMvc
+            .perform(delete("/api/fincas/{id}", finca.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -993,7 +1000,8 @@ public class FincaResourceIT {
             .thenReturn(new PageImpl<>(Collections.singletonList(finca), PageRequest.of(0, 1), 1));
 
         // Search the finca
-        restFincaMockMvc.perform(get("/api/_search/fincas?query=id:" + finca.getId()))
+        restFincaMockMvc
+            .perform(get("/api/_search/fincas?query=id:" + finca.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(finca.getId().intValue())))
@@ -1003,6 +1011,6 @@ public class FincaResourceIT {
             .andExpect(jsonPath("$.[*].codigoCatastral").value(hasItem(DEFAULT_CODIGO_CATASTRAL)))
             .andExpect(jsonPath("$.[*].municipio").value(hasItem(DEFAULT_MUNICIPIO)))
             .andExpect(jsonPath("$.[*].vereda").value(hasItem(DEFAULT_VEREDA)))
-            .andExpect(jsonPath("$.[*].obserrvaciones").value(hasItem(DEFAULT_OBSERRVACIONES)));
+            .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES)));
     }
 }

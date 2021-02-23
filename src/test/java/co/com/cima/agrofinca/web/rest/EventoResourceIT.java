@@ -1,20 +1,32 @@
 package co.com.cima.agrofinca.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import co.com.cima.agrofinca.AgrofincaApp;
 import co.com.cima.agrofinca.config.TestSecurityConfiguration;
-import co.com.cima.agrofinca.domain.Evento;
 import co.com.cima.agrofinca.domain.AnimalEvento;
+import co.com.cima.agrofinca.domain.Evento;
 import co.com.cima.agrofinca.domain.Parametros;
 import co.com.cima.agrofinca.repository.EventoRepository;
 import co.com.cima.agrofinca.repository.search.EventoSearchRepository;
+import co.com.cima.agrofinca.service.EventoQueryService;
 import co.com.cima.agrofinca.service.EventoService;
 import co.com.cima.agrofinca.service.dto.EventoCriteria;
-import co.com.cima.agrofinca.service.EventoQueryService;
-
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,19 +37,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link EventoResource} REST controller.
@@ -47,7 +46,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class EventoResourceIT {
-
     private static final LocalDate DEFAULT_FECHA = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA = LocalDate.now(ZoneId.systemDefault());
     private static final LocalDate SMALLER_FECHA = LocalDate.ofEpochDay(-1L);
@@ -87,11 +85,10 @@ public class EventoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Evento createEntity(EntityManager em) {
-        Evento evento = new Evento()
-            .fecha(DEFAULT_FECHA)
-            .observacion(DEFAULT_OBSERVACION);
+        Evento evento = new Evento().fecha(DEFAULT_FECHA).observacion(DEFAULT_OBSERVACION);
         return evento;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -99,9 +96,7 @@ public class EventoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Evento createUpdatedEntity(EntityManager em) {
-        Evento evento = new Evento()
-            .fecha(UPDATED_FECHA)
-            .observacion(UPDATED_OBSERVACION);
+        Evento evento = new Evento().fecha(UPDATED_FECHA).observacion(UPDATED_OBSERVACION);
         return evento;
     }
 
@@ -115,9 +110,10 @@ public class EventoResourceIT {
     public void createEvento() throws Exception {
         int databaseSizeBeforeCreate = eventoRepository.findAll().size();
         // Create the Evento
-        restEventoMockMvc.perform(post("/api/eventos").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(evento)))
+        restEventoMockMvc
+            .perform(
+                post("/api/eventos").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(evento))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Evento in the database
@@ -140,9 +136,10 @@ public class EventoResourceIT {
         evento.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restEventoMockMvc.perform(post("/api/eventos").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(evento)))
+        restEventoMockMvc
+            .perform(
+                post("/api/eventos").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(evento))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Evento in the database
@@ -153,7 +150,6 @@ public class EventoResourceIT {
         verify(mockEventoSearchRepository, times(0)).save(evento);
     }
 
-
     @Test
     @Transactional
     public void checkFechaIsRequired() throws Exception {
@@ -163,10 +159,10 @@ public class EventoResourceIT {
 
         // Create the Evento, which fails.
 
-
-        restEventoMockMvc.perform(post("/api/eventos").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(evento)))
+        restEventoMockMvc
+            .perform(
+                post("/api/eventos").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(evento))
+            )
             .andExpect(status().isBadRequest());
 
         List<Evento> eventoList = eventoRepository.findAll();
@@ -180,14 +176,15 @@ public class EventoResourceIT {
         eventoRepository.saveAndFlush(evento);
 
         // Get all the eventoList
-        restEventoMockMvc.perform(get("/api/eventos?sort=id,desc"))
+        restEventoMockMvc
+            .perform(get("/api/eventos?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(evento.getId().intValue())))
             .andExpect(jsonPath("$.[*].fecha").value(hasItem(DEFAULT_FECHA.toString())))
             .andExpect(jsonPath("$.[*].observacion").value(hasItem(DEFAULT_OBSERVACION)));
     }
-    
+
     @Test
     @Transactional
     public void getEvento() throws Exception {
@@ -195,14 +192,14 @@ public class EventoResourceIT {
         eventoRepository.saveAndFlush(evento);
 
         // Get the evento
-        restEventoMockMvc.perform(get("/api/eventos/{id}", evento.getId()))
+        restEventoMockMvc
+            .perform(get("/api/eventos/{id}", evento.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(evento.getId().intValue()))
             .andExpect(jsonPath("$.fecha").value(DEFAULT_FECHA.toString()))
             .andExpect(jsonPath("$.observacion").value(DEFAULT_OBSERVACION));
     }
-
 
     @Test
     @Transactional
@@ -221,7 +218,6 @@ public class EventoResourceIT {
         defaultEventoShouldBeFound("id.lessThanOrEqual=" + id);
         defaultEventoShouldNotBeFound("id.lessThan=" + id);
     }
-
 
     @Test
     @Transactional
@@ -327,7 +323,6 @@ public class EventoResourceIT {
         defaultEventoShouldBeFound("fecha.greaterThan=" + SMALLER_FECHA);
     }
 
-
     @Test
     @Transactional
     public void getAllEventosByObservacionIsEqualToSomething() throws Exception {
@@ -379,7 +374,8 @@ public class EventoResourceIT {
         // Get all the eventoList where observacion is null
         defaultEventoShouldNotBeFound("observacion.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllEventosByObservacionContainsSomething() throws Exception {
         // Initialize the database
@@ -405,7 +401,6 @@ public class EventoResourceIT {
         defaultEventoShouldBeFound("observacion.doesNotContain=" + UPDATED_OBSERVACION);
     }
 
-
     @Test
     @Transactional
     public void getAllEventosByEventosIsEqualToSomething() throws Exception {
@@ -425,7 +420,6 @@ public class EventoResourceIT {
         defaultEventoShouldNotBeFound("eventosId.equals=" + (eventosId + 1));
     }
 
-
     @Test
     @Transactional
     public void getAllEventosByEventoIsEqualToSomething() throws Exception {
@@ -434,8 +428,8 @@ public class EventoResourceIT {
         Parametros evento = ParametrosResourceIT.createEntity(em);
         em.persist(evento);
         em.flush();
-        evento.setEvento(evento);
-        eventoRepository.saveAndFlush(evento);
+        //evento.setEventos(evento);
+        //eventoRepository.saveAndFlush(evento);
         Long eventoId = evento.getId();
 
         // Get all the eventoList where evento equals to eventoId
@@ -449,7 +443,8 @@ public class EventoResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultEventoShouldBeFound(String filter) throws Exception {
-        restEventoMockMvc.perform(get("/api/eventos?sort=id,desc&" + filter))
+        restEventoMockMvc
+            .perform(get("/api/eventos?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(evento.getId().intValue())))
@@ -457,7 +452,8 @@ public class EventoResourceIT {
             .andExpect(jsonPath("$.[*].observacion").value(hasItem(DEFAULT_OBSERVACION)));
 
         // Check, that the count call also returns 1
-        restEventoMockMvc.perform(get("/api/eventos/count?sort=id,desc&" + filter))
+        restEventoMockMvc
+            .perform(get("/api/eventos/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -467,14 +463,16 @@ public class EventoResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultEventoShouldNotBeFound(String filter) throws Exception {
-        restEventoMockMvc.perform(get("/api/eventos?sort=id,desc&" + filter))
+        restEventoMockMvc
+            .perform(get("/api/eventos?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restEventoMockMvc.perform(get("/api/eventos/count?sort=id,desc&" + filter))
+        restEventoMockMvc
+            .perform(get("/api/eventos/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -484,8 +482,7 @@ public class EventoResourceIT {
     @Transactional
     public void getNonExistingEvento() throws Exception {
         // Get the evento
-        restEventoMockMvc.perform(get("/api/eventos/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restEventoMockMvc.perform(get("/api/eventos/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -500,13 +497,15 @@ public class EventoResourceIT {
         Evento updatedEvento = eventoRepository.findById(evento.getId()).get();
         // Disconnect from session so that the updates on updatedEvento are not directly saved in db
         em.detach(updatedEvento);
-        updatedEvento
-            .fecha(UPDATED_FECHA)
-            .observacion(UPDATED_OBSERVACION);
+        updatedEvento.fecha(UPDATED_FECHA).observacion(UPDATED_OBSERVACION);
 
-        restEventoMockMvc.perform(put("/api/eventos").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedEvento)))
+        restEventoMockMvc
+            .perform(
+                put("/api/eventos")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedEvento))
+            )
             .andExpect(status().isOk());
 
         // Validate the Evento in the database
@@ -526,9 +525,10 @@ public class EventoResourceIT {
         int databaseSizeBeforeUpdate = eventoRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restEventoMockMvc.perform(put("/api/eventos").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(evento)))
+        restEventoMockMvc
+            .perform(
+                put("/api/eventos").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(evento))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Evento in the database
@@ -548,8 +548,8 @@ public class EventoResourceIT {
         int databaseSizeBeforeDelete = eventoRepository.findAll().size();
 
         // Delete the evento
-        restEventoMockMvc.perform(delete("/api/eventos/{id}", evento.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restEventoMockMvc
+            .perform(delete("/api/eventos/{id}", evento.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -570,7 +570,8 @@ public class EventoResourceIT {
             .thenReturn(new PageImpl<>(Collections.singletonList(evento), PageRequest.of(0, 1), 1));
 
         // Search the evento
-        restEventoMockMvc.perform(get("/api/_search/eventos?query=id:" + evento.getId()))
+        restEventoMockMvc
+            .perform(get("/api/_search/eventos?query=id:" + evento.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(evento.getId().intValue())))

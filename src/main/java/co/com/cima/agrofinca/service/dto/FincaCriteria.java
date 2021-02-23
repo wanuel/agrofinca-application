@@ -1,8 +1,7 @@
 package co.com.cima.agrofinca.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
 import io.github.jhipster.service.Criteria;
+import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
@@ -10,7 +9,8 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.BigDecimalFilter;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link co.com.cima.agrofinca.domain.Finca} entity. This class is used
@@ -22,7 +22,6 @@ import io.github.jhipster.service.filter.BigDecimalFilter;
  * fix type specific filters.
  */
 public class FincaCriteria implements Serializable, Criteria {
-
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
@@ -39,12 +38,11 @@ public class FincaCriteria implements Serializable, Criteria {
 
     private StringFilter vereda;
 
-    private StringFilter obserrvaciones;
+    private StringFilter observaciones;
 
     private LongFilter potrerosId;
 
-    public FincaCriteria() {
-    }
+    public FincaCriteria() {}
 
     public FincaCriteria(FincaCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
@@ -54,7 +52,7 @@ public class FincaCriteria implements Serializable, Criteria {
         this.codigoCatastral = other.codigoCatastral == null ? null : other.codigoCatastral.copy();
         this.municipio = other.municipio == null ? null : other.municipio.copy();
         this.vereda = other.vereda == null ? null : other.vereda.copy();
-        this.obserrvaciones = other.obserrvaciones == null ? null : other.obserrvaciones.copy();
+        this.observaciones = other.observaciones == null ? null : other.observaciones.copy();
         this.potrerosId = other.potrerosId == null ? null : other.potrerosId.copy();
     }
 
@@ -119,12 +117,12 @@ public class FincaCriteria implements Serializable, Criteria {
         this.vereda = vereda;
     }
 
-    public StringFilter getObserrvaciones() {
-        return obserrvaciones;
+    public StringFilter getObservaciones() {
+        return observaciones;
     }
 
-    public void setObserrvaciones(StringFilter obserrvaciones) {
-        this.obserrvaciones = obserrvaciones;
+    public void setObservaciones(StringFilter observaciones) {
+        this.observaciones = observaciones;
     }
 
     public LongFilter getPotrerosId() {
@@ -135,7 +133,6 @@ public class FincaCriteria implements Serializable, Criteria {
         this.potrerosId = potrerosId;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -145,7 +142,7 @@ public class FincaCriteria implements Serializable, Criteria {
             return false;
         }
         final FincaCriteria that = (FincaCriteria) o;
-        return
+        return (
             Objects.equals(id, that.id) &&
             Objects.equals(nombre, that.nombre) &&
             Objects.equals(area, that.area) &&
@@ -153,23 +150,14 @@ public class FincaCriteria implements Serializable, Criteria {
             Objects.equals(codigoCatastral, that.codigoCatastral) &&
             Objects.equals(municipio, that.municipio) &&
             Objects.equals(vereda, that.vereda) &&
-            Objects.equals(obserrvaciones, that.obserrvaciones) &&
-            Objects.equals(potrerosId, that.potrerosId);
+            Objects.equals(observaciones, that.observaciones) &&
+            Objects.equals(potrerosId, that.potrerosId)
+        );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-        id,
-        nombre,
-        area,
-        matricula,
-        codigoCatastral,
-        municipio,
-        vereda,
-        obserrvaciones,
-        potrerosId
-        );
+        return Objects.hash(id, nombre, area, matricula, codigoCatastral, municipio, vereda, observaciones, potrerosId);
     }
 
     // prettier-ignore
@@ -183,9 +171,8 @@ public class FincaCriteria implements Serializable, Criteria {
                 (codigoCatastral != null ? "codigoCatastral=" + codigoCatastral + ", " : "") +
                 (municipio != null ? "municipio=" + municipio + ", " : "") +
                 (vereda != null ? "vereda=" + vereda + ", " : "") +
-                (obserrvaciones != null ? "obserrvaciones=" + obserrvaciones + ", " : "") +
+                (observaciones != null ? "observaciones=" + observaciones + ", " : "") +
                 (potrerosId != null ? "potrerosId=" + potrerosId + ", " : "") +
             "}";
     }
-
 }

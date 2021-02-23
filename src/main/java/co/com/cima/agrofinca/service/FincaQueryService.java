@@ -1,9 +1,13 @@
 package co.com.cima.agrofinca.service;
 
+import co.com.cima.agrofinca.domain.*; // for static metamodels
+import co.com.cima.agrofinca.domain.Finca;
+import co.com.cima.agrofinca.repository.FincaRepository;
+import co.com.cima.agrofinca.repository.search.FincaSearchRepository;
+import co.com.cima.agrofinca.service.dto.FincaCriteria;
+import io.github.jhipster.service.QueryService;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,14 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import co.com.cima.agrofinca.domain.Finca;
-import co.com.cima.agrofinca.domain.*; // for static metamodels
-import co.com.cima.agrofinca.repository.FincaRepository;
-import co.com.cima.agrofinca.repository.search.FincaSearchRepository;
-import co.com.cima.agrofinca.service.dto.FincaCriteria;
 
 /**
  * Service for executing complex queries for {@link Finca} entities in the database.
@@ -29,7 +25,6 @@ import co.com.cima.agrofinca.service.dto.FincaCriteria;
 @Service
 @Transactional(readOnly = true)
 public class FincaQueryService extends QueryService<Finca> {
-
     private final Logger log = LoggerFactory.getLogger(FincaQueryService.class);
 
     private final FincaRepository fincaRepository;
@@ -107,12 +102,14 @@ public class FincaQueryService extends QueryService<Finca> {
             if (criteria.getVereda() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getVereda(), Finca_.vereda));
             }
-            if (criteria.getObserrvaciones() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getObserrvaciones(), Finca_.obserrvaciones));
+            if (criteria.getObservaciones() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getObservaciones(), Finca_.observaciones));
             }
             if (criteria.getPotrerosId() != null) {
-                specification = specification.and(buildSpecification(criteria.getPotrerosId(),
-                    root -> root.join(Finca_.potreros, JoinType.LEFT).get(Potrero_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getPotrerosId(), root -> root.join(Finca_.potreros, JoinType.LEFT).get(Potrero_.id))
+                    );
             }
         }
         return specification;

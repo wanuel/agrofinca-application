@@ -1,18 +1,18 @@
 package co.com.cima.agrofinca.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
-import io.github.jhipster.service.Criteria;
-import co.com.cima.agrofinca.domain.enumeration.TIPODOCUMENTO;
 import co.com.cima.agrofinca.domain.enumeration.GENERO;
+import co.com.cima.agrofinca.domain.enumeration.TIPODOCUMENTO;
+import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link co.com.cima.agrofinca.domain.Persona} entity. This class is used
@@ -24,13 +24,13 @@ import io.github.jhipster.service.filter.LocalDateFilter;
  * fix type specific filters.
  */
 public class PersonaCriteria implements Serializable, Criteria {
+
     /**
      * Class for filtering TIPODOCUMENTO
      */
     public static class TIPODOCUMENTOFilter extends Filter<TIPODOCUMENTO> {
 
-        public TIPODOCUMENTOFilter() {
-        }
+        public TIPODOCUMENTOFilter() {}
 
         public TIPODOCUMENTOFilter(TIPODOCUMENTOFilter filter) {
             super(filter);
@@ -40,15 +40,14 @@ public class PersonaCriteria implements Serializable, Criteria {
         public TIPODOCUMENTOFilter copy() {
             return new TIPODOCUMENTOFilter(this);
         }
-
     }
+
     /**
      * Class for filtering GENERO
      */
     public static class GENEROFilter extends Filter<GENERO> {
 
-        public GENEROFilter() {
-        }
+        public GENEROFilter() {}
 
         public GENEROFilter(GENEROFilter filter) {
             super(filter);
@@ -58,7 +57,6 @@ public class PersonaCriteria implements Serializable, Criteria {
         public GENEROFilter copy() {
             return new GENEROFilter(this);
         }
-
     }
 
     private static final long serialVersionUID = 1L;
@@ -67,7 +65,7 @@ public class PersonaCriteria implements Serializable, Criteria {
 
     private TIPODOCUMENTOFilter tipoDocumento;
 
-    private LongFilter numDocuemnto;
+    private LongFilter numDocumento;
 
     private StringFilter primerNombre;
 
@@ -83,13 +81,12 @@ public class PersonaCriteria implements Serializable, Criteria {
 
     private LongFilter socioId;
 
-    public PersonaCriteria() {
-    }
+    public PersonaCriteria() {}
 
     public PersonaCriteria(PersonaCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.tipoDocumento = other.tipoDocumento == null ? null : other.tipoDocumento.copy();
-        this.numDocuemnto = other.numDocuemnto == null ? null : other.numDocuemnto.copy();
+        this.numDocumento = other.numDocumento == null ? null : other.numDocumento.copy();
         this.primerNombre = other.primerNombre == null ? null : other.primerNombre.copy();
         this.segundoNombre = other.segundoNombre == null ? null : other.segundoNombre.copy();
         this.primerApellido = other.primerApellido == null ? null : other.primerApellido.copy();
@@ -120,12 +117,12 @@ public class PersonaCriteria implements Serializable, Criteria {
         this.tipoDocumento = tipoDocumento;
     }
 
-    public LongFilter getNumDocuemnto() {
-        return numDocuemnto;
+    public LongFilter getNumDocumento() {
+        return numDocumento;
     }
 
-    public void setNumDocuemnto(LongFilter numDocuemnto) {
-        this.numDocuemnto = numDocuemnto;
+    public void setNumDocumento(LongFilter numDocumento) {
+        this.numDocumento = numDocumento;
     }
 
     public StringFilter getPrimerNombre() {
@@ -184,7 +181,6 @@ public class PersonaCriteria implements Serializable, Criteria {
         this.socioId = socioId;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -194,32 +190,33 @@ public class PersonaCriteria implements Serializable, Criteria {
             return false;
         }
         final PersonaCriteria that = (PersonaCriteria) o;
-        return
+        return (
             Objects.equals(id, that.id) &&
             Objects.equals(tipoDocumento, that.tipoDocumento) &&
-            Objects.equals(numDocuemnto, that.numDocuemnto) &&
+            Objects.equals(numDocumento, that.numDocumento) &&
             Objects.equals(primerNombre, that.primerNombre) &&
             Objects.equals(segundoNombre, that.segundoNombre) &&
             Objects.equals(primerApellido, that.primerApellido) &&
             Objects.equals(segundoApellido, that.segundoApellido) &&
             Objects.equals(fechaNacimiento, that.fechaNacimiento) &&
             Objects.equals(genero, that.genero) &&
-            Objects.equals(socioId, that.socioId);
+            Objects.equals(socioId, that.socioId)
+        );
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        tipoDocumento,
-        numDocuemnto,
-        primerNombre,
-        segundoNombre,
-        primerApellido,
-        segundoApellido,
-        fechaNacimiento,
-        genero,
-        socioId
+            id,
+            tipoDocumento,
+            numDocumento,
+            primerNombre,
+            segundoNombre,
+            primerApellido,
+            segundoApellido,
+            fechaNacimiento,
+            genero,
+            socioId
         );
     }
 
@@ -229,7 +226,7 @@ public class PersonaCriteria implements Serializable, Criteria {
         return "PersonaCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (tipoDocumento != null ? "tipoDocumento=" + tipoDocumento + ", " : "") +
-                (numDocuemnto != null ? "numDocuemnto=" + numDocuemnto + ", " : "") +
+                (numDocumento != null ? "numDocumento=" + numDocumento + ", " : "") +
                 (primerNombre != null ? "primerNombre=" + primerNombre + ", " : "") +
                 (segundoNombre != null ? "segundoNombre=" + segundoNombre + ", " : "") +
                 (primerApellido != null ? "primerApellido=" + primerApellido + ", " : "") +
@@ -239,5 +236,4 @@ public class PersonaCriteria implements Serializable, Criteria {
                 (socioId != null ? "socioId=" + socioId + ", " : "") +
             "}";
     }
-
 }

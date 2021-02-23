@@ -1,19 +1,15 @@
 package co.com.cima.agrofinca.domain;
 
+import co.com.cima.agrofinca.domain.enumeration.GENERO;
+import co.com.cima.agrofinca.domain.enumeration.TIPODOCUMENTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
 import java.time.LocalDate;
-
-import co.com.cima.agrofinca.domain.enumeration.TIPODOCUMENTO;
-
-import co.com.cima.agrofinca.domain.enumeration.GENERO;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 /**
  * A Persona.
@@ -23,7 +19,6 @@ import co.com.cima.agrofinca.domain.enumeration.GENERO;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "persona")
 public class Persona implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -36,8 +31,8 @@ public class Persona implements Serializable {
     private TIPODOCUMENTO tipoDocumento;
 
     @NotNull
-    @Column(name = "num_docuemnto", nullable = false)
-    private Long numDocuemnto;
+    @Column(name = "num_documento", nullable = false)
+    private Long numDocumento;
 
     @NotNull
     @Column(name = "primer_nombre", nullable = false)
@@ -85,17 +80,17 @@ public class Persona implements Serializable {
         this.tipoDocumento = tipoDocumento;
     }
 
-    public Long getNumDocuemnto() {
-        return numDocuemnto;
+    public Long getNumDocumento() {
+        return numDocumento;
     }
 
-    public Persona numDocuemnto(Long numDocuemnto) {
-        this.numDocuemnto = numDocuemnto;
+    public Persona numDocumento(Long numDocumento) {
+        this.numDocumento = numDocumento;
         return this;
     }
 
-    public void setNumDocuemnto(Long numDocuemnto) {
-        this.numDocuemnto = numDocuemnto;
+    public void setNumDocumento(Long numDocumento) {
+        this.numDocumento = numDocumento;
     }
 
     public String getPrimerNombre() {
@@ -188,6 +183,7 @@ public class Persona implements Serializable {
     public void setSocio(Socio socio) {
         this.socio = socio;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -212,7 +208,7 @@ public class Persona implements Serializable {
         return "Persona{" +
             "id=" + getId() +
             ", tipoDocumento='" + getTipoDocumento() + "'" +
-            ", numDocuemnto=" + getNumDocuemnto() +
+            ", numDocumento=" + getNumDocumento() +
             ", primerNombre='" + getPrimerNombre() + "'" +
             ", segundoNombre='" + getSegundoNombre() + "'" +
             ", primerApellido='" + getPrimerApellido() + "'" +

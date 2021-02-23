@@ -1,19 +1,33 @@
 package co.com.cima.agrofinca.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import co.com.cima.agrofinca.AgrofincaApp;
 import co.com.cima.agrofinca.config.TestSecurityConfiguration;
 import co.com.cima.agrofinca.domain.Persona;
 import co.com.cima.agrofinca.domain.Socio;
+import co.com.cima.agrofinca.domain.enumeration.GENERO;
+import co.com.cima.agrofinca.domain.enumeration.TIPODOCUMENTO;
 import co.com.cima.agrofinca.repository.PersonaRepository;
 import co.com.cima.agrofinca.repository.search.PersonaSearchRepository;
+import co.com.cima.agrofinca.service.PersonaQueryService;
 import co.com.cima.agrofinca.service.PersonaService;
 import co.com.cima.agrofinca.service.dto.PersonaCriteria;
-import co.com.cima.agrofinca.service.PersonaQueryService;
-
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,22 +38,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import co.com.cima.agrofinca.domain.enumeration.TIPODOCUMENTO;
-import co.com.cima.agrofinca.domain.enumeration.GENERO;
 /**
  * Integration tests for the {@link PersonaResource} REST controller.
  */
@@ -48,7 +47,6 @@ import co.com.cima.agrofinca.domain.enumeration.GENERO;
 @AutoConfigureMockMvc
 @WithMockUser
 public class PersonaResourceIT {
-
     private static final TIPODOCUMENTO DEFAULT_TIPO_DOCUMENTO = TIPODOCUMENTO.CC;
     private static final TIPODOCUMENTO UPDATED_TIPO_DOCUMENTO = TIPODOCUMENTO.TI;
 
@@ -109,7 +107,7 @@ public class PersonaResourceIT {
     public static Persona createEntity(EntityManager em) {
         Persona persona = new Persona()
             .tipoDocumento(DEFAULT_TIPO_DOCUMENTO)
-            .numDocuemnto(DEFAULT_NUM_DOCUEMNTO)
+            .numDocumento(DEFAULT_NUM_DOCUEMNTO)
             .primerNombre(DEFAULT_PRIMER_NOMBRE)
             .segundoNombre(DEFAULT_SEGUNDO_NOMBRE)
             .primerApellido(DEFAULT_PRIMER_APELLIDO)
@@ -118,6 +116,7 @@ public class PersonaResourceIT {
             .genero(DEFAULT_GENERO);
         return persona;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -127,7 +126,7 @@ public class PersonaResourceIT {
     public static Persona createUpdatedEntity(EntityManager em) {
         Persona persona = new Persona()
             .tipoDocumento(UPDATED_TIPO_DOCUMENTO)
-            .numDocuemnto(UPDATED_NUM_DOCUEMNTO)
+            .numDocumento(UPDATED_NUM_DOCUEMNTO)
             .primerNombre(UPDATED_PRIMER_NOMBRE)
             .segundoNombre(UPDATED_SEGUNDO_NOMBRE)
             .primerApellido(UPDATED_PRIMER_APELLIDO)
@@ -147,9 +146,13 @@ public class PersonaResourceIT {
     public void createPersona() throws Exception {
         int databaseSizeBeforeCreate = personaRepository.findAll().size();
         // Create the Persona
-        restPersonaMockMvc.perform(post("/api/personas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(
+                post("/api/personas")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Persona in the database
@@ -157,7 +160,7 @@ public class PersonaResourceIT {
         assertThat(personaList).hasSize(databaseSizeBeforeCreate + 1);
         Persona testPersona = personaList.get(personaList.size() - 1);
         assertThat(testPersona.getTipoDocumento()).isEqualTo(DEFAULT_TIPO_DOCUMENTO);
-        assertThat(testPersona.getNumDocuemnto()).isEqualTo(DEFAULT_NUM_DOCUEMNTO);
+        assertThat(testPersona.getNumDocumento()).isEqualTo(DEFAULT_NUM_DOCUEMNTO);
         assertThat(testPersona.getPrimerNombre()).isEqualTo(DEFAULT_PRIMER_NOMBRE);
         assertThat(testPersona.getSegundoNombre()).isEqualTo(DEFAULT_SEGUNDO_NOMBRE);
         assertThat(testPersona.getPrimerApellido()).isEqualTo(DEFAULT_PRIMER_APELLIDO);
@@ -178,9 +181,13 @@ public class PersonaResourceIT {
         persona.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPersonaMockMvc.perform(post("/api/personas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(
+                post("/api/personas")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Persona in the database
@@ -191,7 +198,6 @@ public class PersonaResourceIT {
         verify(mockPersonaSearchRepository, times(0)).save(persona);
     }
 
-
     @Test
     @Transactional
     public void checkTipoDocumentoIsRequired() throws Exception {
@@ -201,10 +207,13 @@ public class PersonaResourceIT {
 
         // Create the Persona, which fails.
 
-
-        restPersonaMockMvc.perform(post("/api/personas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(
+                post("/api/personas")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
             .andExpect(status().isBadRequest());
 
         List<Persona> personaList = personaRepository.findAll();
@@ -213,17 +222,20 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void checkNumDocuemntoIsRequired() throws Exception {
+    public void checkNumDocumentoIsRequired() throws Exception {
         int databaseSizeBeforeTest = personaRepository.findAll().size();
         // set the field null
-        persona.setNumDocuemnto(null);
+        persona.setNumDocumento(null);
 
         // Create the Persona, which fails.
 
-
-        restPersonaMockMvc.perform(post("/api/personas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(
+                post("/api/personas")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
             .andExpect(status().isBadRequest());
 
         List<Persona> personaList = personaRepository.findAll();
@@ -239,10 +251,13 @@ public class PersonaResourceIT {
 
         // Create the Persona, which fails.
 
-
-        restPersonaMockMvc.perform(post("/api/personas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(
+                post("/api/personas")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
             .andExpect(status().isBadRequest());
 
         List<Persona> personaList = personaRepository.findAll();
@@ -256,12 +271,13 @@ public class PersonaResourceIT {
         personaRepository.saveAndFlush(persona);
 
         // Get all the personaList
-        restPersonaMockMvc.perform(get("/api/personas?sort=id,desc"))
+        restPersonaMockMvc
+            .perform(get("/api/personas?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(persona.getId().intValue())))
             .andExpect(jsonPath("$.[*].tipoDocumento").value(hasItem(DEFAULT_TIPO_DOCUMENTO.toString())))
-            .andExpect(jsonPath("$.[*].numDocuemnto").value(hasItem(DEFAULT_NUM_DOCUEMNTO.intValue())))
+            .andExpect(jsonPath("$.[*].numDocumento").value(hasItem(DEFAULT_NUM_DOCUEMNTO.intValue())))
             .andExpect(jsonPath("$.[*].primerNombre").value(hasItem(DEFAULT_PRIMER_NOMBRE)))
             .andExpect(jsonPath("$.[*].segundoNombre").value(hasItem(DEFAULT_SEGUNDO_NOMBRE)))
             .andExpect(jsonPath("$.[*].primerApellido").value(hasItem(DEFAULT_PRIMER_APELLIDO)))
@@ -269,7 +285,7 @@ public class PersonaResourceIT {
             .andExpect(jsonPath("$.[*].fechaNacimiento").value(hasItem(DEFAULT_FECHA_NACIMIENTO.toString())))
             .andExpect(jsonPath("$.[*].genero").value(hasItem(DEFAULT_GENERO.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getPersona() throws Exception {
@@ -277,12 +293,13 @@ public class PersonaResourceIT {
         personaRepository.saveAndFlush(persona);
 
         // Get the persona
-        restPersonaMockMvc.perform(get("/api/personas/{id}", persona.getId()))
+        restPersonaMockMvc
+            .perform(get("/api/personas/{id}", persona.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(persona.getId().intValue()))
             .andExpect(jsonPath("$.tipoDocumento").value(DEFAULT_TIPO_DOCUMENTO.toString()))
-            .andExpect(jsonPath("$.numDocuemnto").value(DEFAULT_NUM_DOCUEMNTO.intValue()))
+            .andExpect(jsonPath("$.numDocumento").value(DEFAULT_NUM_DOCUEMNTO.intValue()))
             .andExpect(jsonPath("$.primerNombre").value(DEFAULT_PRIMER_NOMBRE))
             .andExpect(jsonPath("$.segundoNombre").value(DEFAULT_SEGUNDO_NOMBRE))
             .andExpect(jsonPath("$.primerApellido").value(DEFAULT_PRIMER_APELLIDO))
@@ -290,7 +307,6 @@ public class PersonaResourceIT {
             .andExpect(jsonPath("$.fechaNacimiento").value(DEFAULT_FECHA_NACIMIENTO.toString()))
             .andExpect(jsonPath("$.genero").value(DEFAULT_GENERO.toString()));
     }
-
 
     @Test
     @Transactional
@@ -309,7 +325,6 @@ public class PersonaResourceIT {
         defaultPersonaShouldBeFound("id.lessThanOrEqual=" + id);
         defaultPersonaShouldNotBeFound("id.lessThan=" + id);
     }
-
 
     @Test
     @Transactional
@@ -365,108 +380,107 @@ public class PersonaResourceIT {
 
     @Test
     @Transactional
-    public void getAllPersonasByNumDocuemntoIsEqualToSomething() throws Exception {
+    public void getAllPersonasByNumDocumentoIsEqualToSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numDocuemnto equals to DEFAULT_NUM_DOCUEMNTO
-        defaultPersonaShouldBeFound("numDocuemnto.equals=" + DEFAULT_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento equals to DEFAULT_NUM_DOCUEMNTO
+        defaultPersonaShouldBeFound("numDocumento.equals=" + DEFAULT_NUM_DOCUEMNTO);
 
-        // Get all the personaList where numDocuemnto equals to UPDATED_NUM_DOCUEMNTO
-        defaultPersonaShouldNotBeFound("numDocuemnto.equals=" + UPDATED_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento equals to UPDATED_NUM_DOCUEMNTO
+        defaultPersonaShouldNotBeFound("numDocumento.equals=" + UPDATED_NUM_DOCUEMNTO);
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumDocuemntoIsNotEqualToSomething() throws Exception {
+    public void getAllPersonasByNumDocumentoIsNotEqualToSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numDocuemnto not equals to DEFAULT_NUM_DOCUEMNTO
-        defaultPersonaShouldNotBeFound("numDocuemnto.notEquals=" + DEFAULT_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento not equals to DEFAULT_NUM_DOCUEMNTO
+        defaultPersonaShouldNotBeFound("numDocumento.notEquals=" + DEFAULT_NUM_DOCUEMNTO);
 
-        // Get all the personaList where numDocuemnto not equals to UPDATED_NUM_DOCUEMNTO
-        defaultPersonaShouldBeFound("numDocuemnto.notEquals=" + UPDATED_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento not equals to UPDATED_NUM_DOCUEMNTO
+        defaultPersonaShouldBeFound("numDocumento.notEquals=" + UPDATED_NUM_DOCUEMNTO);
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumDocuemntoIsInShouldWork() throws Exception {
+    public void getAllPersonasByNumDocumentoIsInShouldWork() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numDocuemnto in DEFAULT_NUM_DOCUEMNTO or UPDATED_NUM_DOCUEMNTO
-        defaultPersonaShouldBeFound("numDocuemnto.in=" + DEFAULT_NUM_DOCUEMNTO + "," + UPDATED_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento in DEFAULT_NUM_DOCUEMNTO or UPDATED_NUM_DOCUEMNTO
+        defaultPersonaShouldBeFound("numDocumento.in=" + DEFAULT_NUM_DOCUEMNTO + "," + UPDATED_NUM_DOCUEMNTO);
 
-        // Get all the personaList where numDocuemnto equals to UPDATED_NUM_DOCUEMNTO
-        defaultPersonaShouldNotBeFound("numDocuemnto.in=" + UPDATED_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento equals to UPDATED_NUM_DOCUEMNTO
+        defaultPersonaShouldNotBeFound("numDocumento.in=" + UPDATED_NUM_DOCUEMNTO);
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumDocuemntoIsNullOrNotNull() throws Exception {
+    public void getAllPersonasByNumDocumentoIsNullOrNotNull() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numDocuemnto is not null
-        defaultPersonaShouldBeFound("numDocuemnto.specified=true");
+        // Get all the personaList where numDocumento is not null
+        defaultPersonaShouldBeFound("numDocumento.specified=true");
 
-        // Get all the personaList where numDocuemnto is null
-        defaultPersonaShouldNotBeFound("numDocuemnto.specified=false");
+        // Get all the personaList where numDocumento is null
+        defaultPersonaShouldNotBeFound("numDocumento.specified=false");
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumDocuemntoIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllPersonasByNumDocumentoIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numDocuemnto is greater than or equal to DEFAULT_NUM_DOCUEMNTO
-        defaultPersonaShouldBeFound("numDocuemnto.greaterThanOrEqual=" + DEFAULT_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento is greater than or equal to DEFAULT_NUM_DOCUEMNTO
+        defaultPersonaShouldBeFound("numDocumento.greaterThanOrEqual=" + DEFAULT_NUM_DOCUEMNTO);
 
-        // Get all the personaList where numDocuemnto is greater than or equal to UPDATED_NUM_DOCUEMNTO
-        defaultPersonaShouldNotBeFound("numDocuemnto.greaterThanOrEqual=" + UPDATED_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento is greater than or equal to UPDATED_NUM_DOCUEMNTO
+        defaultPersonaShouldNotBeFound("numDocumento.greaterThanOrEqual=" + UPDATED_NUM_DOCUEMNTO);
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumDocuemntoIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllPersonasByNumDocumentoIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numDocuemnto is less than or equal to DEFAULT_NUM_DOCUEMNTO
-        defaultPersonaShouldBeFound("numDocuemnto.lessThanOrEqual=" + DEFAULT_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento is less than or equal to DEFAULT_NUM_DOCUEMNTO
+        defaultPersonaShouldBeFound("numDocumento.lessThanOrEqual=" + DEFAULT_NUM_DOCUEMNTO);
 
-        // Get all the personaList where numDocuemnto is less than or equal to SMALLER_NUM_DOCUEMNTO
-        defaultPersonaShouldNotBeFound("numDocuemnto.lessThanOrEqual=" + SMALLER_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento is less than or equal to SMALLER_NUM_DOCUEMNTO
+        defaultPersonaShouldNotBeFound("numDocumento.lessThanOrEqual=" + SMALLER_NUM_DOCUEMNTO);
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumDocuemntoIsLessThanSomething() throws Exception {
+    public void getAllPersonasByNumDocumentoIsLessThanSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numDocuemnto is less than DEFAULT_NUM_DOCUEMNTO
-        defaultPersonaShouldNotBeFound("numDocuemnto.lessThan=" + DEFAULT_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento is less than DEFAULT_NUM_DOCUEMNTO
+        defaultPersonaShouldNotBeFound("numDocumento.lessThan=" + DEFAULT_NUM_DOCUEMNTO);
 
-        // Get all the personaList where numDocuemnto is less than UPDATED_NUM_DOCUEMNTO
-        defaultPersonaShouldBeFound("numDocuemnto.lessThan=" + UPDATED_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento is less than UPDATED_NUM_DOCUEMNTO
+        defaultPersonaShouldBeFound("numDocumento.lessThan=" + UPDATED_NUM_DOCUEMNTO);
     }
 
     @Test
     @Transactional
-    public void getAllPersonasByNumDocuemntoIsGreaterThanSomething() throws Exception {
+    public void getAllPersonasByNumDocumentoIsGreaterThanSomething() throws Exception {
         // Initialize the database
         personaRepository.saveAndFlush(persona);
 
-        // Get all the personaList where numDocuemnto is greater than DEFAULT_NUM_DOCUEMNTO
-        defaultPersonaShouldNotBeFound("numDocuemnto.greaterThan=" + DEFAULT_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento is greater than DEFAULT_NUM_DOCUEMNTO
+        defaultPersonaShouldNotBeFound("numDocumento.greaterThan=" + DEFAULT_NUM_DOCUEMNTO);
 
-        // Get all the personaList where numDocuemnto is greater than SMALLER_NUM_DOCUEMNTO
-        defaultPersonaShouldBeFound("numDocuemnto.greaterThan=" + SMALLER_NUM_DOCUEMNTO);
+        // Get all the personaList where numDocumento is greater than SMALLER_NUM_DOCUEMNTO
+        defaultPersonaShouldBeFound("numDocumento.greaterThan=" + SMALLER_NUM_DOCUEMNTO);
     }
-
 
     @Test
     @Transactional
@@ -519,7 +533,8 @@ public class PersonaResourceIT {
         // Get all the personaList where primerNombre is null
         defaultPersonaShouldNotBeFound("primerNombre.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllPersonasByPrimerNombreContainsSomething() throws Exception {
         // Initialize the database
@@ -544,7 +559,6 @@ public class PersonaResourceIT {
         // Get all the personaList where primerNombre does not contain UPDATED_PRIMER_NOMBRE
         defaultPersonaShouldBeFound("primerNombre.doesNotContain=" + UPDATED_PRIMER_NOMBRE);
     }
-
 
     @Test
     @Transactional
@@ -597,7 +611,8 @@ public class PersonaResourceIT {
         // Get all the personaList where segundoNombre is null
         defaultPersonaShouldNotBeFound("segundoNombre.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllPersonasBySegundoNombreContainsSomething() throws Exception {
         // Initialize the database
@@ -622,7 +637,6 @@ public class PersonaResourceIT {
         // Get all the personaList where segundoNombre does not contain UPDATED_SEGUNDO_NOMBRE
         defaultPersonaShouldBeFound("segundoNombre.doesNotContain=" + UPDATED_SEGUNDO_NOMBRE);
     }
-
 
     @Test
     @Transactional
@@ -675,7 +689,8 @@ public class PersonaResourceIT {
         // Get all the personaList where primerApellido is null
         defaultPersonaShouldNotBeFound("primerApellido.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllPersonasByPrimerApellidoContainsSomething() throws Exception {
         // Initialize the database
@@ -700,7 +715,6 @@ public class PersonaResourceIT {
         // Get all the personaList where primerApellido does not contain UPDATED_PRIMER_APELLIDO
         defaultPersonaShouldBeFound("primerApellido.doesNotContain=" + UPDATED_PRIMER_APELLIDO);
     }
-
 
     @Test
     @Transactional
@@ -753,7 +767,8 @@ public class PersonaResourceIT {
         // Get all the personaList where segundoApellido is null
         defaultPersonaShouldNotBeFound("segundoApellido.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllPersonasBySegundoApellidoContainsSomething() throws Exception {
         // Initialize the database
@@ -778,7 +793,6 @@ public class PersonaResourceIT {
         // Get all the personaList where segundoApellido does not contain UPDATED_SEGUNDO_APELLIDO
         defaultPersonaShouldBeFound("segundoApellido.doesNotContain=" + UPDATED_SEGUNDO_APELLIDO);
     }
-
 
     @Test
     @Transactional
@@ -884,7 +898,6 @@ public class PersonaResourceIT {
         defaultPersonaShouldBeFound("fechaNacimiento.greaterThan=" + SMALLER_FECHA_NACIMIENTO);
     }
 
-
     @Test
     @Transactional
     public void getAllPersonasByGeneroIsEqualToSomething() throws Exception {
@@ -960,12 +973,13 @@ public class PersonaResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultPersonaShouldBeFound(String filter) throws Exception {
-        restPersonaMockMvc.perform(get("/api/personas?sort=id,desc&" + filter))
+        restPersonaMockMvc
+            .perform(get("/api/personas?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(persona.getId().intValue())))
             .andExpect(jsonPath("$.[*].tipoDocumento").value(hasItem(DEFAULT_TIPO_DOCUMENTO.toString())))
-            .andExpect(jsonPath("$.[*].numDocuemnto").value(hasItem(DEFAULT_NUM_DOCUEMNTO.intValue())))
+            .andExpect(jsonPath("$.[*].numDocumento").value(hasItem(DEFAULT_NUM_DOCUEMNTO.intValue())))
             .andExpect(jsonPath("$.[*].primerNombre").value(hasItem(DEFAULT_PRIMER_NOMBRE)))
             .andExpect(jsonPath("$.[*].segundoNombre").value(hasItem(DEFAULT_SEGUNDO_NOMBRE)))
             .andExpect(jsonPath("$.[*].primerApellido").value(hasItem(DEFAULT_PRIMER_APELLIDO)))
@@ -974,7 +988,8 @@ public class PersonaResourceIT {
             .andExpect(jsonPath("$.[*].genero").value(hasItem(DEFAULT_GENERO.toString())));
 
         // Check, that the count call also returns 1
-        restPersonaMockMvc.perform(get("/api/personas/count?sort=id,desc&" + filter))
+        restPersonaMockMvc
+            .perform(get("/api/personas/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -984,14 +999,16 @@ public class PersonaResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultPersonaShouldNotBeFound(String filter) throws Exception {
-        restPersonaMockMvc.perform(get("/api/personas?sort=id,desc&" + filter))
+        restPersonaMockMvc
+            .perform(get("/api/personas?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restPersonaMockMvc.perform(get("/api/personas/count?sort=id,desc&" + filter))
+        restPersonaMockMvc
+            .perform(get("/api/personas/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -1001,8 +1018,7 @@ public class PersonaResourceIT {
     @Transactional
     public void getNonExistingPersona() throws Exception {
         // Get the persona
-        restPersonaMockMvc.perform(get("/api/personas/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restPersonaMockMvc.perform(get("/api/personas/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -1019,7 +1035,7 @@ public class PersonaResourceIT {
         em.detach(updatedPersona);
         updatedPersona
             .tipoDocumento(UPDATED_TIPO_DOCUMENTO)
-            .numDocuemnto(UPDATED_NUM_DOCUEMNTO)
+            .numDocumento(UPDATED_NUM_DOCUEMNTO)
             .primerNombre(UPDATED_PRIMER_NOMBRE)
             .segundoNombre(UPDATED_SEGUNDO_NOMBRE)
             .primerApellido(UPDATED_PRIMER_APELLIDO)
@@ -1027,9 +1043,13 @@ public class PersonaResourceIT {
             .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
             .genero(UPDATED_GENERO);
 
-        restPersonaMockMvc.perform(put("/api/personas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPersona)))
+        restPersonaMockMvc
+            .perform(
+                put("/api/personas")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedPersona))
+            )
             .andExpect(status().isOk());
 
         // Validate the Persona in the database
@@ -1037,7 +1057,7 @@ public class PersonaResourceIT {
         assertThat(personaList).hasSize(databaseSizeBeforeUpdate);
         Persona testPersona = personaList.get(personaList.size() - 1);
         assertThat(testPersona.getTipoDocumento()).isEqualTo(UPDATED_TIPO_DOCUMENTO);
-        assertThat(testPersona.getNumDocuemnto()).isEqualTo(UPDATED_NUM_DOCUEMNTO);
+        assertThat(testPersona.getNumDocumento()).isEqualTo(UPDATED_NUM_DOCUEMNTO);
         assertThat(testPersona.getPrimerNombre()).isEqualTo(UPDATED_PRIMER_NOMBRE);
         assertThat(testPersona.getSegundoNombre()).isEqualTo(UPDATED_SEGUNDO_NOMBRE);
         assertThat(testPersona.getPrimerApellido()).isEqualTo(UPDATED_PRIMER_APELLIDO);
@@ -1055,9 +1075,13 @@ public class PersonaResourceIT {
         int databaseSizeBeforeUpdate = personaRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPersonaMockMvc.perform(put("/api/personas").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(persona)))
+        restPersonaMockMvc
+            .perform(
+                put("/api/personas")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(persona))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Persona in the database
@@ -1077,8 +1101,8 @@ public class PersonaResourceIT {
         int databaseSizeBeforeDelete = personaRepository.findAll().size();
 
         // Delete the persona
-        restPersonaMockMvc.perform(delete("/api/personas/{id}", persona.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restPersonaMockMvc
+            .perform(delete("/api/personas/{id}", persona.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -1099,12 +1123,13 @@ public class PersonaResourceIT {
             .thenReturn(new PageImpl<>(Collections.singletonList(persona), PageRequest.of(0, 1), 1));
 
         // Search the persona
-        restPersonaMockMvc.perform(get("/api/_search/personas?query=id:" + persona.getId()))
+        restPersonaMockMvc
+            .perform(get("/api/_search/personas?query=id:" + persona.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(persona.getId().intValue())))
             .andExpect(jsonPath("$.[*].tipoDocumento").value(hasItem(DEFAULT_TIPO_DOCUMENTO.toString())))
-            .andExpect(jsonPath("$.[*].numDocuemnto").value(hasItem(DEFAULT_NUM_DOCUEMNTO.intValue())))
+            .andExpect(jsonPath("$.[*].numDocumento").value(hasItem(DEFAULT_NUM_DOCUEMNTO.intValue())))
             .andExpect(jsonPath("$.[*].primerNombre").value(hasItem(DEFAULT_PRIMER_NOMBRE)))
             .andExpect(jsonPath("$.[*].segundoNombre").value(hasItem(DEFAULT_SEGUNDO_NOMBRE)))
             .andExpect(jsonPath("$.[*].primerApellido").value(hasItem(DEFAULT_PRIMER_APELLIDO)))

@@ -1,9 +1,13 @@
 package co.com.cima.agrofinca.service;
 
+import co.com.cima.agrofinca.domain.*; // for static metamodels
+import co.com.cima.agrofinca.domain.Persona;
+import co.com.cima.agrofinca.repository.PersonaRepository;
+import co.com.cima.agrofinca.repository.search.PersonaSearchRepository;
+import co.com.cima.agrofinca.service.dto.PersonaCriteria;
+import io.github.jhipster.service.QueryService;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,14 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import co.com.cima.agrofinca.domain.Persona;
-import co.com.cima.agrofinca.domain.*; // for static metamodels
-import co.com.cima.agrofinca.repository.PersonaRepository;
-import co.com.cima.agrofinca.repository.search.PersonaSearchRepository;
-import co.com.cima.agrofinca.service.dto.PersonaCriteria;
 
 /**
  * Service for executing complex queries for {@link Persona} entities in the database.
@@ -29,7 +25,6 @@ import co.com.cima.agrofinca.service.dto.PersonaCriteria;
 @Service
 @Transactional(readOnly = true)
 public class PersonaQueryService extends QueryService<Persona> {
-
     private final Logger log = LoggerFactory.getLogger(PersonaQueryService.class);
 
     private final PersonaRepository personaRepository;
@@ -92,8 +87,8 @@ public class PersonaQueryService extends QueryService<Persona> {
             if (criteria.getTipoDocumento() != null) {
                 specification = specification.and(buildSpecification(criteria.getTipoDocumento(), Persona_.tipoDocumento));
             }
-            if (criteria.getNumDocuemnto() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNumDocuemnto(), Persona_.numDocuemnto));
+            if (criteria.getNumDocumento() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNumDocumento(), Persona_.numDocumento));
             }
             if (criteria.getPrimerNombre() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getPrimerNombre(), Persona_.primerNombre));
@@ -114,8 +109,10 @@ public class PersonaQueryService extends QueryService<Persona> {
                 specification = specification.and(buildSpecification(criteria.getGenero(), Persona_.genero));
             }
             if (criteria.getSocioId() != null) {
-                specification = specification.and(buildSpecification(criteria.getSocioId(),
-                    root -> root.join(Persona_.socio, JoinType.LEFT).get(Socio_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getSocioId(), root -> root.join(Persona_.socio, JoinType.LEFT).get(Socio_.id))
+                    );
             }
         }
         return specification;

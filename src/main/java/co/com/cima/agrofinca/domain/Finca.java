@@ -1,16 +1,14 @@
 package co.com.cima.agrofinca.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 /**
  * A Finca.
@@ -20,7 +18,6 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "finca")
 public class Finca implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -46,8 +43,8 @@ public class Finca implements Serializable {
     @Column(name = "vereda")
     private String vereda;
 
-    @Column(name = "obserrvaciones")
-    private String obserrvaciones;
+    @Column(name = "observaciones")
+    private String observaciones;
 
     @OneToMany(mappedBy = "finca")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -140,17 +137,17 @@ public class Finca implements Serializable {
         this.vereda = vereda;
     }
 
-    public String getObserrvaciones() {
-        return obserrvaciones;
+    public String getObservaciones() {
+        return observaciones;
     }
 
-    public Finca obserrvaciones(String obserrvaciones) {
-        this.obserrvaciones = obserrvaciones;
+    public Finca observaciones(String observaciones) {
+        this.observaciones = observaciones;
         return this;
     }
 
-    public void setObserrvaciones(String obserrvaciones) {
-        this.obserrvaciones = obserrvaciones;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public Set<Potrero> getPotreros() {
@@ -177,6 +174,7 @@ public class Finca implements Serializable {
     public void setPotreros(Set<Potrero> potreros) {
         this.potreros = potreros;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -206,7 +204,7 @@ public class Finca implements Serializable {
             ", codigoCatastral='" + getCodigoCatastral() + "'" +
             ", municipio='" + getMunicipio() + "'" +
             ", vereda='" + getVereda() + "'" +
-            ", obserrvaciones='" + getObserrvaciones() + "'" +
+            ", observaciones='" + getObservaciones() + "'" +
             "}";
     }
 }
