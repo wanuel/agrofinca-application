@@ -42,7 +42,7 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mariadb://localhost:3306/agrofinca?useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mariadb://wanuel:3306/agrofinca?useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password: admin
     hikari:
