@@ -1,3 +1,28 @@
+enum ESTADOLOTE {
+	ACTIVO, INACTIVO
+}
+enum SINO {
+    SI, NO
+}
+enum SEXO {
+	MACHO, HEMBRA
+}
+
+enum ESTADOANIMAL {
+	VIVO, MUERTO
+}
+
+enum TIPODOCUMENTO{
+	CC,TI,CE,NIT
+}
+enum GENERO {
+	MASCULINO,FEMENINO
+}
+
+enum ESTADOSOCIEDAD {
+	ACTIVO, INACTIVO
+}
+
 entity Finca {
 	nombre String required,
     area BigDecimal,
@@ -14,11 +39,7 @@ entity Potrero {
     area BigDecimal
 }
 entity Lote {
-<<<<<<< HEAD
 	nombre String required, 
-=======
-  	nombre String required, 
->>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
     fecha LocalDate required, 
     estado ESTADOLOTE required
 }
@@ -29,19 +50,6 @@ entity PotreroPastoreo {
     diasDescanso Integer,
     diasCarga Integer,
     limpia SINO required
-}
-enum ESTADOLOTE {
-	ACTIVO, INACTIVO
-}
-enum SINO {
-    SI, NO
-}
-enum SEXO {
-	MACHO, HEMBRA
-}
-
-enum ESTADOANIMAL {
-	VIVO, MUERTO
 }
 
 entity Animal{
@@ -69,10 +77,6 @@ entity AnimalCostos {
     valor BigDecimal required
 }
 
-entity AnimalEvento {
-	fecha LocalDate
-}
-
 entity AnimalPeso {
 	fecha LocalDate required,
     peso BigDecimal required
@@ -93,14 +97,6 @@ entity AnimalSalud {
     intramuscular SINO required,
     subcutaneo SINO required,
     observacion String
-}
-
-
-enum TIPODOCUMENTO{
-	CC,TI,CE,NIT
-}
-enum GENERO {
-	MASCULINO,FEMENINO
 }
 
 entity Evento {
@@ -129,10 +125,6 @@ entity Sociedad {
     observaciones String
 }
 
-enum ESTADOSOCIEDAD {
-	ACTIVO, INACTIVO
-}
-
 entity Socio {
 	fechaIngreso LocalDate required,
     participacion BigDecimal required
@@ -149,15 +141,15 @@ relationship OneToMany {
     Animal{eventos} to AnimalEvento{animal},
     Evento{eventos} to AnimalEvento{evento},
     AnimalEvento{tratamientos} to AnimalSalud{evento},
-    AnimalEvento{pesos} to AnimalPeso{animal},
-    AnimalEvento{costos} to AnimalCostos{animal},
+    AnimalEvento{pesos} to AnimalPeso{evento},
+    AnimalEvento{costos} to AnimalCostos{evento},
     Parametros{medicamentos} to AnimalSalud{medicamento},
     Parametros{parametros} to Parametros{agrupador},
     Parametros{tipoLotes} to Lote{tipo},
     Parametros{tipos} to Animal{tipo},
     Parametros{razas} to Animal{raza},
-    Socio{personas} to Persona{socio},
-    Socio{sociedades} to Sociedad{socio}
+    Persona{sociedades} to Socio{persona},
+    Sociedad{socios} to Socio{sociedad}
 }
 
 //relationship ManyToMany {
@@ -179,8 +171,5 @@ paginate all with pagination
 service all  with serviceImpl
 // Set an angular suffix
 // angularSuffix * with mySuffix
-<<<<<<< HEAD
 filter *
 
-=======
->>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
