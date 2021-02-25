@@ -1,9 +1,13 @@
 package co.com.cima.agrofinca.service;
 
+import co.com.cima.agrofinca.domain.*; // for static metamodels
+import co.com.cima.agrofinca.domain.Sociedad;
+import co.com.cima.agrofinca.repository.SociedadRepository;
+import co.com.cima.agrofinca.repository.search.SociedadSearchRepository;
+import co.com.cima.agrofinca.service.dto.SociedadCriteria;
+import io.github.jhipster.service.QueryService;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,14 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import co.com.cima.agrofinca.domain.Sociedad;
-import co.com.cima.agrofinca.domain.*; // for static metamodels
-import co.com.cima.agrofinca.repository.SociedadRepository;
-import co.com.cima.agrofinca.repository.search.SociedadSearchRepository;
-import co.com.cima.agrofinca.service.dto.SociedadCriteria;
 
 /**
  * Service for executing complex queries for {@link Sociedad} entities in the database.
@@ -29,7 +25,6 @@ import co.com.cima.agrofinca.service.dto.SociedadCriteria;
 @Service
 @Transactional(readOnly = true)
 public class SociedadQueryService extends QueryService<Sociedad> {
-
     private final Logger log = LoggerFactory.getLogger(SociedadQueryService.class);
 
     private final SociedadRepository sociedadRepository;
@@ -102,8 +97,10 @@ public class SociedadQueryService extends QueryService<Sociedad> {
                 specification = specification.and(buildStringSpecification(criteria.getObservaciones(), Sociedad_.observaciones));
             }
             if (criteria.getSocioId() != null) {
-                specification = specification.and(buildSpecification(criteria.getSocioId(),
-                    root -> root.join(Sociedad_.socio, JoinType.LEFT).get(Socio_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getSocioId(), root -> root.join(Sociedad_.socios, JoinType.LEFT).get(Socio_.id))
+                    );
             }
         }
         return specification;

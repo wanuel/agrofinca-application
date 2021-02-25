@@ -54,20 +54,11 @@
       "otherEntityField": "id"
     }
   ],
-<<<<<<< HEAD
-  "changelogDate": "20210220002313",
-=======
-  "changelogDate": "20210220001542",
->>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
   "entityTableName": "persona",
   "dto": "no",
   "pagination": "pagination",
   "service": "serviceImpl",
-<<<<<<< HEAD
   "jpaMetamodelFiltering": true,
-=======
-  "jpaMetamodelFiltering": false,
->>>>>>> 1e800196f3930793bc6390f3a7eca044600f2c09
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,

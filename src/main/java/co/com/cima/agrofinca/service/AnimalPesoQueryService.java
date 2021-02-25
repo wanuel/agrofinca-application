@@ -1,9 +1,13 @@
 package co.com.cima.agrofinca.service;
 
+import co.com.cima.agrofinca.domain.*; // for static metamodels
+import co.com.cima.agrofinca.domain.AnimalPeso;
+import co.com.cima.agrofinca.repository.AnimalPesoRepository;
+import co.com.cima.agrofinca.repository.search.AnimalPesoSearchRepository;
+import co.com.cima.agrofinca.service.dto.AnimalPesoCriteria;
+import io.github.jhipster.service.QueryService;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,14 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import co.com.cima.agrofinca.domain.AnimalPeso;
-import co.com.cima.agrofinca.domain.*; // for static metamodels
-import co.com.cima.agrofinca.repository.AnimalPesoRepository;
-import co.com.cima.agrofinca.repository.search.AnimalPesoSearchRepository;
-import co.com.cima.agrofinca.service.dto.AnimalPesoCriteria;
 
 /**
  * Service for executing complex queries for {@link AnimalPeso} entities in the database.
@@ -29,7 +25,6 @@ import co.com.cima.agrofinca.service.dto.AnimalPesoCriteria;
 @Service
 @Transactional(readOnly = true)
 public class AnimalPesoQueryService extends QueryService<AnimalPeso> {
-
     private final Logger log = LoggerFactory.getLogger(AnimalPesoQueryService.class);
 
     private final AnimalPesoRepository animalPesoRepository;
@@ -96,8 +91,13 @@ public class AnimalPesoQueryService extends QueryService<AnimalPeso> {
                 specification = specification.and(buildRangeSpecification(criteria.getPeso(), AnimalPeso_.peso));
             }
             if (criteria.getAnimalId() != null) {
-                specification = specification.and(buildSpecification(criteria.getAnimalId(),
-                    root -> root.join(AnimalPeso_.animal, JoinType.LEFT).get(AnimalEvento_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getAnimalId(),
+                            root -> root.join(AnimalPeso_.evento, JoinType.LEFT).get(AnimalEvento_.id)
+                        )
+                    );
             }
         }
         return specification;

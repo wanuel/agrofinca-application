@@ -111,7 +111,7 @@ public class PersonaQueryService extends QueryService<Persona> {
             if (criteria.getSocioId() != null) {
                 specification =
                     specification.and(
-                        buildSpecification(criteria.getSocioId(), root -> root.join(Persona_.socio, JoinType.LEFT).get(Socio_.id))
+                        buildSpecification(criteria.getSocioId(), root -> root.join(Persona_.sociedades, JoinType.LEFT).get(Socio_.id))
                     );
             }
         }

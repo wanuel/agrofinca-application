@@ -24,83 +24,83 @@ enum ESTADOSOCIEDAD {
 }
 
 entity Finca {
-	nombre String required
-    area BigDecimal
-    matricula String
-    codigoCatastral String
-    municipio String 
-    vereda String 
+	nombre String required,
+    area BigDecimal,
+    matricula String,
+    codigoCatastral String,
+    municipio String, 
+    vereda String, 
     obserrvaciones String
 }
 entity Potrero {
-	nombre String required 
-    descripcion String 
-    pasto String
+	nombre String required, 
+    descripcion String, 
+    pasto String,
     area BigDecimal
 }
 entity Lote {
-	nombre String required 
-    fecha LocalDate required 
+	nombre String required, 
+    fecha LocalDate required, 
     estado ESTADOLOTE required
 }
 entity PotreroPastoreo {
-	fechaIngreso LocalDate required
-    fechaSalida LocalDate
-	fechaLimpia LocalDate
-    diasDescanso Integer
-    diasCarga Integer
+	fechaIngreso LocalDate required,
+    fechaSalida LocalDate,
+	fechaLimpia LocalDate,
+    diasDescanso Integer,
+    diasCarga Integer,
     limpia SINO required
 }
 
 entity Animal{
-	nombre String
-    caracterizacion String
-    hierro SINO 
-    fechaNacimiento LocalDate
-    fechaCompra LocalDate
-    sexo SEXO required
-    castrado SINO required
-    fechaCastracion LocalDate 
+	nombre String,
+    caracterizacion String,
+    hierro SINO, 
+    fechaNacimiento LocalDate,
+    fechaCompra LocalDate,
+    sexo SEXO required,
+    castrado SINO required,
+    fechaCastracion LocalDate, 
     estado ESTADOANIMAL required
 }
 entity AnimalLote {
-	fechaIngreso LocalDate required 
+	fechaIngreso LocalDate required, 
     fechaSalida LocalDate
 }
 entity Parametros{
-	nombre String required 
+	nombre String required, 
     descripcion String
 }
 
 entity AnimalCostos {
-	fecha LocalDate required 
+	fecha LocalDate required, 
     valor BigDecimal required
 }
 
 entity AnimalPeso {
-	fecha LocalDate required
+	fecha LocalDate required,
     peso BigDecimal required
 }
 
 entity AnimalImagen {
-	fecha LocalDate required
-    nota String 
+	fecha LocalDate required,
+    nota String, 
     imagen Blob required
 }
 
 entity AnimalSalud {
-	fecha LocalDate required
-    nombre String required 
-    laboratorio String 
-    dosis BigDecimal required
-    inyectado SINO required
-    intramuscular SINO required
-    subcutaneo SINO required
+	fecha LocalDate required,
+    nombre String required, 
+    laboratorio String, 
+    dosis BigDecimal required,
+    inyectado SINO required,
+    intramuscular SINO required,
+    subcutaneo SINO required,
     observacion String
 }
 
 entity Evento {
-	fecha LocalDate required
+	fecha LocalDate required,
     observacion String
 }
 
@@ -108,25 +108,25 @@ entity AnimalEvento {
 	
 }
 entity Persona {
-	tipoDocumento TIPODOCUMENTO required
-    numDocuemnto Long required 
-    primerNombre String required
-    segundoNombre String
-    primerApellido String
-    segundoApellido String
-    fechaNacimiento LocalDate
+	tipoDocumento TIPODOCUMENTO required,
+    numDocuemnto Long required, 
+    primerNombre String required,
+    segundoNombre String,
+    primerApellido String,
+    segundoApellido String,
+    fechaNacimiento LocalDate,
     genero GENERO
 }
 
 entity Sociedad {
-	nombre String required 
-    fechaCreacion LocalDate required
-    estado ESTADOSOCIEDAD required
+	nombre String required, 
+    fechaCreacion LocalDate required,
+    estado ESTADOSOCIEDAD required,
     observaciones String
 }
 
 entity Socio {
-	fechaIngreso LocalDate required
+	fechaIngreso LocalDate required,
     participacion BigDecimal required
 }
 // defining multiple OneToMany relationships with comments

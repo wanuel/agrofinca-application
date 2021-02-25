@@ -958,7 +958,7 @@ public class PersonaResourceIT {
         Socio socio = SocioResourceIT.createEntity(em);
         em.persist(socio);
         em.flush();
-        persona.setSocio(socio);
+        ///persona.setSocio(socio);
         personaRepository.saveAndFlush(persona);
         Long socioId = socio.getId();
 

@@ -1,20 +1,33 @@
 package co.com.cima.agrofinca.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import co.com.cima.agrofinca.AgrofincaApp;
 import co.com.cima.agrofinca.config.TestSecurityConfiguration;
-import co.com.cima.agrofinca.domain.Socio;
 import co.com.cima.agrofinca.domain.Persona;
 import co.com.cima.agrofinca.domain.Sociedad;
+import co.com.cima.agrofinca.domain.Socio;
 import co.com.cima.agrofinca.repository.SocioRepository;
 import co.com.cima.agrofinca.repository.search.SocioSearchRepository;
+import co.com.cima.agrofinca.service.SocioQueryService;
 import co.com.cima.agrofinca.service.SocioService;
 import co.com.cima.agrofinca.service.dto.SocioCriteria;
-import co.com.cima.agrofinca.service.SocioQueryService;
-
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,20 +38,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link SocioResource} REST controller.
@@ -48,7 +47,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class SocioResourceIT {
-
     private static final LocalDate DEFAULT_FECHA_INGRESO = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA_INGRESO = LocalDate.now(ZoneId.systemDefault());
     private static final LocalDate SMALLER_FECHA_INGRESO = LocalDate.ofEpochDay(-1L);
@@ -89,11 +87,10 @@ public class SocioResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Socio createEntity(EntityManager em) {
-        Socio socio = new Socio()
-            .fechaIngreso(DEFAULT_FECHA_INGRESO)
-            .participacion(DEFAULT_PARTICIPACION);
+        Socio socio = new Socio().fechaIngreso(DEFAULT_FECHA_INGRESO).participacion(DEFAULT_PARTICIPACION);
         return socio;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -101,9 +98,7 @@ public class SocioResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Socio createUpdatedEntity(EntityManager em) {
-        Socio socio = new Socio()
-            .fechaIngreso(UPDATED_FECHA_INGRESO)
-            .participacion(UPDATED_PARTICIPACION);
+        Socio socio = new Socio().fechaIngreso(UPDATED_FECHA_INGRESO).participacion(UPDATED_PARTICIPACION);
         return socio;
     }
 
@@ -117,9 +112,10 @@ public class SocioResourceIT {
     public void createSocio() throws Exception {
         int databaseSizeBeforeCreate = socioRepository.findAll().size();
         // Create the Socio
-        restSocioMockMvc.perform(post("/api/socios").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(socio)))
+        restSocioMockMvc
+            .perform(
+                post("/api/socios").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(socio))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Socio in the database
@@ -142,9 +138,10 @@ public class SocioResourceIT {
         socio.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restSocioMockMvc.perform(post("/api/socios").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(socio)))
+        restSocioMockMvc
+            .perform(
+                post("/api/socios").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(socio))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Socio in the database
@@ -155,7 +152,6 @@ public class SocioResourceIT {
         verify(mockSocioSearchRepository, times(0)).save(socio);
     }
 
-
     @Test
     @Transactional
     public void checkFechaIngresoIsRequired() throws Exception {
@@ -165,10 +161,10 @@ public class SocioResourceIT {
 
         // Create the Socio, which fails.
 
-
-        restSocioMockMvc.perform(post("/api/socios").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(socio)))
+        restSocioMockMvc
+            .perform(
+                post("/api/socios").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(socio))
+            )
             .andExpect(status().isBadRequest());
 
         List<Socio> socioList = socioRepository.findAll();
@@ -184,10 +180,10 @@ public class SocioResourceIT {
 
         // Create the Socio, which fails.
 
-
-        restSocioMockMvc.perform(post("/api/socios").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(socio)))
+        restSocioMockMvc
+            .perform(
+                post("/api/socios").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(socio))
+            )
             .andExpect(status().isBadRequest());
 
         List<Socio> socioList = socioRepository.findAll();
@@ -201,14 +197,15 @@ public class SocioResourceIT {
         socioRepository.saveAndFlush(socio);
 
         // Get all the socioList
-        restSocioMockMvc.perform(get("/api/socios?sort=id,desc"))
+        restSocioMockMvc
+            .perform(get("/api/socios?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(socio.getId().intValue())))
             .andExpect(jsonPath("$.[*].fechaIngreso").value(hasItem(DEFAULT_FECHA_INGRESO.toString())))
             .andExpect(jsonPath("$.[*].participacion").value(hasItem(DEFAULT_PARTICIPACION.intValue())));
     }
-    
+
     @Test
     @Transactional
     public void getSocio() throws Exception {
@@ -216,14 +213,14 @@ public class SocioResourceIT {
         socioRepository.saveAndFlush(socio);
 
         // Get the socio
-        restSocioMockMvc.perform(get("/api/socios/{id}", socio.getId()))
+        restSocioMockMvc
+            .perform(get("/api/socios/{id}", socio.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(socio.getId().intValue()))
             .andExpect(jsonPath("$.fechaIngreso").value(DEFAULT_FECHA_INGRESO.toString()))
             .andExpect(jsonPath("$.participacion").value(DEFAULT_PARTICIPACION.intValue()));
     }
-
 
     @Test
     @Transactional
@@ -242,7 +239,6 @@ public class SocioResourceIT {
         defaultSocioShouldBeFound("id.lessThanOrEqual=" + id);
         defaultSocioShouldNotBeFound("id.lessThan=" + id);
     }
-
 
     @Test
     @Transactional
@@ -348,7 +344,6 @@ public class SocioResourceIT {
         defaultSocioShouldBeFound("fechaIngreso.greaterThan=" + SMALLER_FECHA_INGRESO);
     }
 
-
     @Test
     @Transactional
     public void getAllSociosByParticipacionIsEqualToSomething() throws Exception {
@@ -453,18 +448,17 @@ public class SocioResourceIT {
         defaultSocioShouldBeFound("participacion.greaterThan=" + SMALLER_PARTICIPACION);
     }
 
-
     @Test
     @Transactional
     public void getAllSociosByPersonasIsEqualToSomething() throws Exception {
         // Initialize the database
         socioRepository.saveAndFlush(socio);
-        Persona personas = PersonaResourceIT.createEntity(em);
-        em.persist(personas);
+        Persona persona = PersonaResourceIT.createEntity(em);
+        em.persist(persona);
         em.flush();
-        socio.addPersonas(personas);
+        socio.setPersona(persona);
         socioRepository.saveAndFlush(socio);
-        Long personasId = personas.getId();
+        Long personasId = persona.getId();
 
         // Get all the socioList where personas equals to personasId
         defaultSocioShouldBeFound("personasId.equals=" + personasId);
@@ -473,18 +467,17 @@ public class SocioResourceIT {
         defaultSocioShouldNotBeFound("personasId.equals=" + (personasId + 1));
     }
 
-
     @Test
     @Transactional
     public void getAllSociosBySociedadesIsEqualToSomething() throws Exception {
         // Initialize the database
         socioRepository.saveAndFlush(socio);
-        Sociedad sociedades = SociedadResourceIT.createEntity(em);
-        em.persist(sociedades);
+        Sociedad sociedad = SociedadResourceIT.createEntity(em);
+        em.persist(sociedad);
         em.flush();
-        socio.addSociedades(sociedades);
+        socio.setSociedad(sociedad);
         socioRepository.saveAndFlush(socio);
-        Long sociedadesId = sociedades.getId();
+        Long sociedadesId = sociedad.getId();
 
         // Get all the socioList where sociedades equals to sociedadesId
         defaultSocioShouldBeFound("sociedadesId.equals=" + sociedadesId);
@@ -497,7 +490,8 @@ public class SocioResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultSocioShouldBeFound(String filter) throws Exception {
-        restSocioMockMvc.perform(get("/api/socios?sort=id,desc&" + filter))
+        restSocioMockMvc
+            .perform(get("/api/socios?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(socio.getId().intValue())))
@@ -505,7 +499,8 @@ public class SocioResourceIT {
             .andExpect(jsonPath("$.[*].participacion").value(hasItem(DEFAULT_PARTICIPACION.intValue())));
 
         // Check, that the count call also returns 1
-        restSocioMockMvc.perform(get("/api/socios/count?sort=id,desc&" + filter))
+        restSocioMockMvc
+            .perform(get("/api/socios/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -515,14 +510,16 @@ public class SocioResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultSocioShouldNotBeFound(String filter) throws Exception {
-        restSocioMockMvc.perform(get("/api/socios?sort=id,desc&" + filter))
+        restSocioMockMvc
+            .perform(get("/api/socios?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restSocioMockMvc.perform(get("/api/socios/count?sort=id,desc&" + filter))
+        restSocioMockMvc
+            .perform(get("/api/socios/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -532,8 +529,7 @@ public class SocioResourceIT {
     @Transactional
     public void getNonExistingSocio() throws Exception {
         // Get the socio
-        restSocioMockMvc.perform(get("/api/socios/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restSocioMockMvc.perform(get("/api/socios/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -548,13 +544,15 @@ public class SocioResourceIT {
         Socio updatedSocio = socioRepository.findById(socio.getId()).get();
         // Disconnect from session so that the updates on updatedSocio are not directly saved in db
         em.detach(updatedSocio);
-        updatedSocio
-            .fechaIngreso(UPDATED_FECHA_INGRESO)
-            .participacion(UPDATED_PARTICIPACION);
+        updatedSocio.fechaIngreso(UPDATED_FECHA_INGRESO).participacion(UPDATED_PARTICIPACION);
 
-        restSocioMockMvc.perform(put("/api/socios").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedSocio)))
+        restSocioMockMvc
+            .perform(
+                put("/api/socios")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedSocio))
+            )
             .andExpect(status().isOk());
 
         // Validate the Socio in the database
@@ -574,9 +572,10 @@ public class SocioResourceIT {
         int databaseSizeBeforeUpdate = socioRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restSocioMockMvc.perform(put("/api/socios").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(socio)))
+        restSocioMockMvc
+            .perform(
+                put("/api/socios").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(socio))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Socio in the database
@@ -596,8 +595,8 @@ public class SocioResourceIT {
         int databaseSizeBeforeDelete = socioRepository.findAll().size();
 
         // Delete the socio
-        restSocioMockMvc.perform(delete("/api/socios/{id}", socio.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restSocioMockMvc
+            .perform(delete("/api/socios/{id}", socio.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -618,7 +617,8 @@ public class SocioResourceIT {
             .thenReturn(new PageImpl<>(Collections.singletonList(socio), PageRequest.of(0, 1), 1));
 
         // Search the socio
-        restSocioMockMvc.perform(get("/api/_search/socios?query=id:" + socio.getId()))
+        restSocioMockMvc
+            .perform(get("/api/_search/socios?query=id:" + socio.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(socio.getId().intValue())))

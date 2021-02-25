@@ -1,19 +1,32 @@
 package co.com.cima.agrofinca.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import co.com.cima.agrofinca.AgrofincaApp;
 import co.com.cima.agrofinca.config.TestSecurityConfiguration;
 import co.com.cima.agrofinca.domain.Sociedad;
 import co.com.cima.agrofinca.domain.Socio;
+import co.com.cima.agrofinca.domain.enumeration.ESTADOSOCIEDAD;
 import co.com.cima.agrofinca.repository.SociedadRepository;
 import co.com.cima.agrofinca.repository.search.SociedadSearchRepository;
+import co.com.cima.agrofinca.service.SociedadQueryService;
 import co.com.cima.agrofinca.service.SociedadService;
 import co.com.cima.agrofinca.service.dto.SociedadCriteria;
-import co.com.cima.agrofinca.service.SociedadQueryService;
-
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,21 +37,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import co.com.cima.agrofinca.domain.enumeration.ESTADOSOCIEDAD;
 /**
  * Integration tests for the {@link SociedadResource} REST controller.
  */
@@ -47,7 +46,6 @@ import co.com.cima.agrofinca.domain.enumeration.ESTADOSOCIEDAD;
 @AutoConfigureMockMvc
 @WithMockUser
 public class SociedadResourceIT {
-
     private static final String DEFAULT_NOMBRE = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE = "BBBBBBBBBB";
 
@@ -100,6 +98,7 @@ public class SociedadResourceIT {
             .observaciones(DEFAULT_OBSERVACIONES);
         return sociedad;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -125,9 +124,13 @@ public class SociedadResourceIT {
     public void createSociedad() throws Exception {
         int databaseSizeBeforeCreate = sociedadRepository.findAll().size();
         // Create the Sociedad
-        restSociedadMockMvc.perform(post("/api/sociedads").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(sociedad)))
+        restSociedadMockMvc
+            .perform(
+                post("/api/sociedads")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(sociedad))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Sociedad in the database
@@ -152,9 +155,13 @@ public class SociedadResourceIT {
         sociedad.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restSociedadMockMvc.perform(post("/api/sociedads").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(sociedad)))
+        restSociedadMockMvc
+            .perform(
+                post("/api/sociedads")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(sociedad))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Sociedad in the database
@@ -165,7 +172,6 @@ public class SociedadResourceIT {
         verify(mockSociedadSearchRepository, times(0)).save(sociedad);
     }
 
-
     @Test
     @Transactional
     public void checkNombreIsRequired() throws Exception {
@@ -175,10 +181,13 @@ public class SociedadResourceIT {
 
         // Create the Sociedad, which fails.
 
-
-        restSociedadMockMvc.perform(post("/api/sociedads").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(sociedad)))
+        restSociedadMockMvc
+            .perform(
+                post("/api/sociedads")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(sociedad))
+            )
             .andExpect(status().isBadRequest());
 
         List<Sociedad> sociedadList = sociedadRepository.findAll();
@@ -194,10 +203,13 @@ public class SociedadResourceIT {
 
         // Create the Sociedad, which fails.
 
-
-        restSociedadMockMvc.perform(post("/api/sociedads").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(sociedad)))
+        restSociedadMockMvc
+            .perform(
+                post("/api/sociedads")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(sociedad))
+            )
             .andExpect(status().isBadRequest());
 
         List<Sociedad> sociedadList = sociedadRepository.findAll();
@@ -213,10 +225,13 @@ public class SociedadResourceIT {
 
         // Create the Sociedad, which fails.
 
-
-        restSociedadMockMvc.perform(post("/api/sociedads").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(sociedad)))
+        restSociedadMockMvc
+            .perform(
+                post("/api/sociedads")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(sociedad))
+            )
             .andExpect(status().isBadRequest());
 
         List<Sociedad> sociedadList = sociedadRepository.findAll();
@@ -230,7 +245,8 @@ public class SociedadResourceIT {
         sociedadRepository.saveAndFlush(sociedad);
 
         // Get all the sociedadList
-        restSociedadMockMvc.perform(get("/api/sociedads?sort=id,desc"))
+        restSociedadMockMvc
+            .perform(get("/api/sociedads?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(sociedad.getId().intValue())))
@@ -239,7 +255,7 @@ public class SociedadResourceIT {
             .andExpect(jsonPath("$.[*].estado").value(hasItem(DEFAULT_ESTADO.toString())))
             .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES)));
     }
-    
+
     @Test
     @Transactional
     public void getSociedad() throws Exception {
@@ -247,7 +263,8 @@ public class SociedadResourceIT {
         sociedadRepository.saveAndFlush(sociedad);
 
         // Get the sociedad
-        restSociedadMockMvc.perform(get("/api/sociedads/{id}", sociedad.getId()))
+        restSociedadMockMvc
+            .perform(get("/api/sociedads/{id}", sociedad.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(sociedad.getId().intValue()))
@@ -256,7 +273,6 @@ public class SociedadResourceIT {
             .andExpect(jsonPath("$.estado").value(DEFAULT_ESTADO.toString()))
             .andExpect(jsonPath("$.observaciones").value(DEFAULT_OBSERVACIONES));
     }
-
 
     @Test
     @Transactional
@@ -275,7 +291,6 @@ public class SociedadResourceIT {
         defaultSociedadShouldBeFound("id.lessThanOrEqual=" + id);
         defaultSociedadShouldNotBeFound("id.lessThan=" + id);
     }
-
 
     @Test
     @Transactional
@@ -328,7 +343,8 @@ public class SociedadResourceIT {
         // Get all the sociedadList where nombre is null
         defaultSociedadShouldNotBeFound("nombre.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllSociedadsByNombreContainsSomething() throws Exception {
         // Initialize the database
@@ -353,7 +369,6 @@ public class SociedadResourceIT {
         // Get all the sociedadList where nombre does not contain UPDATED_NOMBRE
         defaultSociedadShouldBeFound("nombre.doesNotContain=" + UPDATED_NOMBRE);
     }
-
 
     @Test
     @Transactional
@@ -459,7 +474,6 @@ public class SociedadResourceIT {
         defaultSociedadShouldBeFound("fechaCreacion.greaterThan=" + SMALLER_FECHA_CREACION);
     }
 
-
     @Test
     @Transactional
     public void getAllSociedadsByEstadoIsEqualToSomething() throws Exception {
@@ -563,7 +577,8 @@ public class SociedadResourceIT {
         // Get all the sociedadList where observaciones is null
         defaultSociedadShouldNotBeFound("observaciones.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllSociedadsByObservacionesContainsSomething() throws Exception {
         // Initialize the database
@@ -589,7 +604,6 @@ public class SociedadResourceIT {
         defaultSociedadShouldBeFound("observaciones.doesNotContain=" + UPDATED_OBSERVACIONES);
     }
 
-
     @Test
     @Transactional
     public void getAllSociedadsBySocioIsEqualToSomething() throws Exception {
@@ -598,7 +612,7 @@ public class SociedadResourceIT {
         Socio socio = SocioResourceIT.createEntity(em);
         em.persist(socio);
         em.flush();
-        sociedad.setSocio(socio);
+        //sociedad.setSocio(socio);
         sociedadRepository.saveAndFlush(sociedad);
         Long socioId = socio.getId();
 
@@ -613,7 +627,8 @@ public class SociedadResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultSociedadShouldBeFound(String filter) throws Exception {
-        restSociedadMockMvc.perform(get("/api/sociedads?sort=id,desc&" + filter))
+        restSociedadMockMvc
+            .perform(get("/api/sociedads?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(sociedad.getId().intValue())))
@@ -623,7 +638,8 @@ public class SociedadResourceIT {
             .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES)));
 
         // Check, that the count call also returns 1
-        restSociedadMockMvc.perform(get("/api/sociedads/count?sort=id,desc&" + filter))
+        restSociedadMockMvc
+            .perform(get("/api/sociedads/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -633,14 +649,16 @@ public class SociedadResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultSociedadShouldNotBeFound(String filter) throws Exception {
-        restSociedadMockMvc.perform(get("/api/sociedads?sort=id,desc&" + filter))
+        restSociedadMockMvc
+            .perform(get("/api/sociedads?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restSociedadMockMvc.perform(get("/api/sociedads/count?sort=id,desc&" + filter))
+        restSociedadMockMvc
+            .perform(get("/api/sociedads/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -650,8 +668,7 @@ public class SociedadResourceIT {
     @Transactional
     public void getNonExistingSociedad() throws Exception {
         // Get the sociedad
-        restSociedadMockMvc.perform(get("/api/sociedads/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restSociedadMockMvc.perform(get("/api/sociedads/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -672,9 +689,13 @@ public class SociedadResourceIT {
             .estado(UPDATED_ESTADO)
             .observaciones(UPDATED_OBSERVACIONES);
 
-        restSociedadMockMvc.perform(put("/api/sociedads").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedSociedad)))
+        restSociedadMockMvc
+            .perform(
+                put("/api/sociedads")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedSociedad))
+            )
             .andExpect(status().isOk());
 
         // Validate the Sociedad in the database
@@ -696,9 +717,13 @@ public class SociedadResourceIT {
         int databaseSizeBeforeUpdate = sociedadRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restSociedadMockMvc.perform(put("/api/sociedads").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(sociedad)))
+        restSociedadMockMvc
+            .perform(
+                put("/api/sociedads")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(sociedad))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Sociedad in the database
@@ -718,8 +743,8 @@ public class SociedadResourceIT {
         int databaseSizeBeforeDelete = sociedadRepository.findAll().size();
 
         // Delete the sociedad
-        restSociedadMockMvc.perform(delete("/api/sociedads/{id}", sociedad.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restSociedadMockMvc
+            .perform(delete("/api/sociedads/{id}", sociedad.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
@@ -740,7 +765,8 @@ public class SociedadResourceIT {
             .thenReturn(new PageImpl<>(Collections.singletonList(sociedad), PageRequest.of(0, 1), 1));
 
         // Search the sociedad
-        restSociedadMockMvc.perform(get("/api/_search/sociedads?query=id:" + sociedad.getId()))
+        restSociedadMockMvc
+            .perform(get("/api/_search/sociedads?query=id:" + sociedad.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(sociedad.getId().intValue())))

@@ -1,9 +1,13 @@
 package co.com.cima.agrofinca.service;
 
+import co.com.cima.agrofinca.domain.*; // for static metamodels
+import co.com.cima.agrofinca.domain.AnimalCostos;
+import co.com.cima.agrofinca.repository.AnimalCostosRepository;
+import co.com.cima.agrofinca.repository.search.AnimalCostosSearchRepository;
+import co.com.cima.agrofinca.service.dto.AnimalCostosCriteria;
+import io.github.jhipster.service.QueryService;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,14 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import co.com.cima.agrofinca.domain.AnimalCostos;
-import co.com.cima.agrofinca.domain.*; // for static metamodels
-import co.com.cima.agrofinca.repository.AnimalCostosRepository;
-import co.com.cima.agrofinca.repository.search.AnimalCostosSearchRepository;
-import co.com.cima.agrofinca.service.dto.AnimalCostosCriteria;
 
 /**
  * Service for executing complex queries for {@link AnimalCostos} entities in the database.
@@ -29,14 +25,16 @@ import co.com.cima.agrofinca.service.dto.AnimalCostosCriteria;
 @Service
 @Transactional(readOnly = true)
 public class AnimalCostosQueryService extends QueryService<AnimalCostos> {
-
     private final Logger log = LoggerFactory.getLogger(AnimalCostosQueryService.class);
 
     private final AnimalCostosRepository animalCostosRepository;
 
     private final AnimalCostosSearchRepository animalCostosSearchRepository;
 
-    public AnimalCostosQueryService(AnimalCostosRepository animalCostosRepository, AnimalCostosSearchRepository animalCostosSearchRepository) {
+    public AnimalCostosQueryService(
+        AnimalCostosRepository animalCostosRepository,
+        AnimalCostosSearchRepository animalCostosSearchRepository
+    ) {
         this.animalCostosRepository = animalCostosRepository;
         this.animalCostosSearchRepository = animalCostosSearchRepository;
     }
@@ -96,8 +94,13 @@ public class AnimalCostosQueryService extends QueryService<AnimalCostos> {
                 specification = specification.and(buildRangeSpecification(criteria.getValor(), AnimalCostos_.valor));
             }
             if (criteria.getAnimalId() != null) {
-                specification = specification.and(buildSpecification(criteria.getAnimalId(),
-                    root -> root.join(AnimalCostos_.animal, JoinType.LEFT).get(AnimalEvento_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getAnimalId(),
+                            root -> root.join(AnimalCostos_.evento, JoinType.LEFT).get(AnimalEvento_.id)
+                        )
+                    );
             }
         }
         return specification;
