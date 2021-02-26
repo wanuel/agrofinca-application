@@ -180,7 +180,7 @@ export const AnimalUpdate = (props: IAnimalUpdateProps) => {
                   {parametros
                     ? parametros.map(otherEntity => (
                         <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.id}
+                          {otherEntity.nombre}
                         </option>
                       ))
                     : null}
@@ -195,7 +195,7 @@ export const AnimalUpdate = (props: IAnimalUpdateProps) => {
                   {parametros
                     ? parametros.map(otherEntity => (
                         <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.id}
+                          {otherEntity.nombre}
                         </option>
                       ))
                     : null}

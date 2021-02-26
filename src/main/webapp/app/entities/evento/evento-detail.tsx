@@ -40,7 +40,7 @@ export const EventoDetail = (props: IEventoDetailProps) => {
           <dt>
             <Translate contentKey="agrofincaApp.evento.evento">Evento</Translate>
           </dt>
-          <dd>{eventoEntity.evento ? eventoEntity.evento.id : ''}</dd>
+          <dd>{eventoEntity.evento ? eventoEntity.evento.nombre : ''}</dd>
         </dl>
         <Button tag={Link} to="/evento" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}

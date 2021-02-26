@@ -175,7 +175,7 @@ export const Evento = (props: IEventoProps) => {
                   </td>
                   <td>{evento.fecha ? <TextFormat type="date" value={evento.fecha} format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                   <td>{evento.observacion}</td>
-                  <td>{evento.evento ? <Link to={`parametros/${evento.evento.id}`}>{evento.evento.id}</Link> : ''}</td>
+                  <td>{evento.evento ? <Link to={`parametros/${evento.evento.id}`}>{evento.evento.nombre}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${evento.id}`} color="info" size="sm">

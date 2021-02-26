@@ -146,7 +146,7 @@ export const PotreroPastoreoUpdate = (props: IPotreroPastoreoUpdateProps) => {
                   {lotes
                     ? lotes.map(otherEntity => (
                         <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.id}
+                          {otherEntity.nombre}
                         </option>
                       ))
                     : null}
@@ -161,7 +161,7 @@ export const PotreroPastoreoUpdate = (props: IPotreroPastoreoUpdateProps) => {
                   {potreros
                     ? potreros.map(otherEntity => (
                         <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.id}
+                          {otherEntity.nombre}
                         </option>
                       ))
                     : null}

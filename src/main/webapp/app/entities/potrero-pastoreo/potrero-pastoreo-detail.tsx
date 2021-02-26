@@ -76,11 +76,11 @@ export const PotreroPastoreoDetail = (props: IPotreroPastoreoDetailProps) => {
           <dt>
             <Translate contentKey="agrofincaApp.potreroPastoreo.lote">Lote</Translate>
           </dt>
-          <dd>{potreroPastoreoEntity.lote ? potreroPastoreoEntity.lote.id : ''}</dd>
+          <dd>{potreroPastoreoEntity.lote ? potreroPastoreoEntity.lote.nombre : ''}</dd>
           <dt>
             <Translate contentKey="agrofincaApp.potreroPastoreo.potrero">Potrero</Translate>
           </dt>
-          <dd>{potreroPastoreoEntity.potrero ? potreroPastoreoEntity.potrero.id : ''}</dd>
+          <dd>{potreroPastoreoEntity.potrero ? potreroPastoreoEntity.potrero.nombre : ''}</dd>
         </dl>
         <Button tag={Link} to="/potrero-pastoreo" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}

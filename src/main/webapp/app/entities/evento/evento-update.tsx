@@ -108,8 +108,8 @@ export const EventoUpdate = (props: IEventoUpdateProps) => {
                   <option value="" key="0" />
                   {parametros
                     ? parametros.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.id}
+                        <option value={otherEntity.nombre} key={otherEntity.id}>
+                          {otherEntity.nombre}
                         </option>
                       ))
                     : null}

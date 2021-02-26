@@ -181,7 +181,7 @@ export const Lote = (props: ILoteProps) => {
                   <td>
                     <Translate contentKey={`agrofincaApp.ESTADOLOTE.${lote.estado}`} />
                   </td>
-                  <td>{lote.tipo ? <Link to={`parametros/${lote.tipo.id}`}>{lote.tipo.id}</Link> : ''}</td>
+                  <td>{lote.tipo ? <Link to={`parametros/${lote.tipo.id}`}>{lote.tipo.nombre}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${lote.id}`} color="info" size="sm">

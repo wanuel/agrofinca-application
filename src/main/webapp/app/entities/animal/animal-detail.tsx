@@ -92,11 +92,11 @@ export const AnimalDetail = (props: IAnimalDetailProps) => {
           <dt>
             <Translate contentKey="agrofincaApp.animal.tipo">Tipo</Translate>
           </dt>
-          <dd>{animalEntity.tipo ? animalEntity.tipo.id : ''}</dd>
+          <dd>{animalEntity.tipo ? animalEntity.tipo.nombre : ''}</dd>
           <dt>
             <Translate contentKey="agrofincaApp.animal.raza">Raza</Translate>
           </dt>
-          <dd>{animalEntity.raza ? animalEntity.raza.id : ''}</dd>
+          <dd>{animalEntity.raza ? animalEntity.raza.nombre : ''}</dd>
         </dl>
         <Button tag={Link} to="/animal" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}

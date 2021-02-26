@@ -166,11 +166,11 @@ export const AnimalEvento = (props: IAnimalEventoProps) => {
                 <tr key={`entity-${i}`}>
                   <td>
                     <Button tag={Link} to={`${match.url}/${animalEvento.id}`} color="link" size="sm">
-                      {animalEvento.id}
+                      {animalEvento.animal.nombre}
                     </Button>
                   </td>
-                  <td>{animalEvento.animal ? <Link to={`animal/${animalEvento.animal.id}`}>{animalEvento.animal.id}</Link> : ''}</td>
-                  <td>{animalEvento.evento ? <Link to={`evento/${animalEvento.evento.id}`}>{animalEvento.evento.id}</Link> : ''}</td>
+                  <td>{animalEvento.animal ? <Link to={`animal/${animalEvento.animal.id}`}>{animalEvento.animal.nombre}</Link> : ''}</td>
+                  <td>{animalEvento.evento ? <Link to={`evento/${animalEvento.evento.id}`}>{animalEvento.evento.evento.nombre}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${animalEvento.id}`} color="info" size="sm">

@@ -210,9 +210,9 @@ export const PotreroPastoreo = (props: IPotreroPastoreoProps) => {
                   <td>
                     <Translate contentKey={`agrofincaApp.SINO.${potreroPastoreo.limpia}`} />
                   </td>
-                  <td>{potreroPastoreo.lote ? <Link to={`lote/${potreroPastoreo.lote.id}`}>{potreroPastoreo.lote.id}</Link> : ''}</td>
+                  <td>{potreroPastoreo.lote ? <Link to={`lote/${potreroPastoreo.lote.id}`}>{potreroPastoreo.lote.nombre}</Link> : ''}</td>
                   <td>
-                    {potreroPastoreo.potrero ? <Link to={`potrero/${potreroPastoreo.potrero.id}`}>{potreroPastoreo.potrero.id}</Link> : ''}
+                    {potreroPastoreo.potrero ? <Link to={`potrero/${potreroPastoreo.potrero.id}`}>{potreroPastoreo.potrero.nombre}</Link> : ''}
                   </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

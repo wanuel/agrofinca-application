@@ -3,7 +3,8 @@
     "ESTADOANIMAL": {
       "null": "",
       "VIVO": "VIVO",
-      "MUERTO": "MUERTO"
+      "MUERTO": "MUERTO",
+      "VENDIDO": "VENDIDO"
     }
   }
 }

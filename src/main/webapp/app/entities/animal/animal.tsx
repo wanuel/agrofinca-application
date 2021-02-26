@@ -224,8 +224,8 @@ export const Animal = (props: IAnimalProps) => {
                   <td>
                     <Translate contentKey={`agrofincaApp.ESTADOANIMAL.${animal.estado}`} />
                   </td>
-                  <td>{animal.tipo ? <Link to={`parametros/${animal.tipo.id}`}>{animal.tipo.id}</Link> : ''}</td>
-                  <td>{animal.raza ? <Link to={`parametros/${animal.raza.id}`}>{animal.raza.id}</Link> : ''}</td>
+                  <td>{animal.tipo ? <Link to={`parametros/${animal.tipo.id}`}>{animal.tipo.nombre}</Link> : ''}</td>
+                  <td>{animal.raza ? <Link to={`parametros/${animal.raza.id}`}>{animal.raza.nombre}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${animal.id}`} color="info" size="sm">
